@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\PedidoProgramado;
+use App\Services\PedidoProgramadoService;
 use Illuminate\Http\Request;
 
 class PedidoProgramadoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $pedidoProgramadoService;
+
+    public function __construct(PedidoProgramadoService $pedidoProgramadoService)
     {
-        //
+        $this->pedidoProgramadoService = $pedidoProgramadoService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $pedidoProgramado = $this->pedidoProgramadoService->create($request->all());
+
+            return response()->json([
+                'message' => 'PedidoProgramado criado com sucesso.',
+                'data' => $pedidoProgramado,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o PedidoProgramado.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $pedidoProgramado = $this->pedidoProgramadoService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'pedidoProgramado(s) buscado(s) com sucesso.',
+                'data' => $pedidoProgramado,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) pedidoProgramado(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(PedidoProgramado $pedidoProgramado)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $pedidoProgramado = $this->pedidoProgramadoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'PedidoProgramado(s) buscado(s) com sucesso.',
+                'data' => $pedidoProgramado,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) pedidoProgramado(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(PedidoProgramado $pedidoProgramado)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $pedidoProgramado = $this->pedidoProgramadoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'PedidoProgramado(s) atualizado(s) com sucesso.',
+                'data' => $pedidoProgramado,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o pedidoProgramado.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, PedidoProgramado $pedidoProgramado)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(PedidoProgramado $pedidoProgramado)
-    {
-        //
+            $pedidoProgramado = $this->pedidoProgramadoService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'PedidoProgramado exluído com sucesso.',
+                'data' => $pedidoProgramado,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o pedidoProgramado.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

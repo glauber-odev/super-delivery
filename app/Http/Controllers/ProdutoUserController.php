@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProdutoUser;
+use App\Services\ProdutoUserService;
 use Illuminate\Http\Request;
 
 class ProdutoUserController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $produtoUserService;
+
+    public function __construct(ProdutoUserService $produtoUserService)
     {
-        //
+        $this->produtoUserService = $produtoUserService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $produtoUser = $this->produtoUserService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $produtoUser,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $produtoUser = $this->produtoUserService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'produtoUser(s) buscado(s) com sucesso.',
+                'data' => $produtoUser,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoUser(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProdutoUser $produtoUser)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoUser = $this->produtoUserService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $produtoUser,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoUser(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProdutoUser $produtoUser)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoUser = $this->produtoUserService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $produtoUser,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o produtoUser.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ProdutoUser $produtoUser)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProdutoUser $produtoUser)
-    {
-        //
+            $produtoUser = $this->produtoUserService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $produtoUser,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o produtoUser.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

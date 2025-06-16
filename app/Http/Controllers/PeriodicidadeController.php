@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\Periodicidade;
+use App\Services\PeriodicidadeService;
 use Illuminate\Http\Request;
 
 class PeriodicidadeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $periodicidadeService;
+
+    public function __construct(PeriodicidadeService $periodicidadeService)
     {
-        //
+        $this->periodicidadeService = $periodicidadeService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $periodicidade = $this->periodicidadeService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $periodicidade,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $periodicidade = $this->periodicidadeService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'periodicidade(s) buscado(s) com sucesso.',
+                'data' => $periodicidade,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) periodicidade(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Periodicidade $periodicidade)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $periodicidade = $this->periodicidadeService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $periodicidade,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) periodicidade(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Periodicidade $periodicidade)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $periodicidade = $this->periodicidadeService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $periodicidade,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o periodicidade.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Periodicidade $periodicidade)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Periodicidade $periodicidade)
-    {
-        //
+            $periodicidade = $this->periodicidadeService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $periodicidade,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o periodicidade.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

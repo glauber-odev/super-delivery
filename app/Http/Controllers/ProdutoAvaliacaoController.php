@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProdutoAvaliacao;
+use App\Services\ProdutoAvaliacaoService;
 use Illuminate\Http\Request;
 
 class ProdutoAvaliacaoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $produtoAvaliacaoService;
+
+    public function __construct(ProdutoAvaliacaoService $produtoAvaliacaoService)
     {
-        //
+        $this->produtoAvaliacaoService = $produtoAvaliacaoService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $produtoAvaliacao = $this->produtoAvaliacaoService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $produtoAvaliacao,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $produtoAvaliacao = $this->produtoAvaliacaoService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'produtoAvaliacao(s) buscado(s) com sucesso.',
+                'data' => $produtoAvaliacao,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoAvaliacao(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProdutoAvaliacao $produtoAvaliacao)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoAvaliacao = $this->produtoAvaliacaoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $produtoAvaliacao,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoAvaliacao(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProdutoAvaliacao $produtoAvaliacao)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoAvaliacao = $this->produtoAvaliacaoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $produtoAvaliacao,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o produtoAvaliacao.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ProdutoAvaliacao $produtoAvaliacao)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProdutoAvaliacao $produtoAvaliacao)
-    {
-        //
+            $produtoAvaliacao = $this->produtoAvaliacaoService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $produtoAvaliacao,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o produtoAvaliacao.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

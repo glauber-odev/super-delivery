@@ -34,12 +34,22 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|lowercase|email|max:255|unique:'.User::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'cpf' => 'required|string|between:11,15',
+            'telefone_1' => 'required|string|between:11,15',
+            'telefone_2' => 'string|nullable|between:11,15',
+        ], [
+            'cpf.between' => 'CPF inválido',
+            'telefone_1.between' => 'Telefone inválido',
+            'telefone_2.between' => 'Telefone inválido',
         ]);
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'cpf' => $request->cpf,
+            'telefone_1' => $request->telefone_1,
+            'telefone_2' => $request->telefone_2,
         ]);
 
         event(new Registered($user));

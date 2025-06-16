@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\ProdutoImagem;
+use App\Services\ProdutoImagemService;
 use Illuminate\Http\Request;
 
 class ProdutoImagemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $produtoImagemService;
+
+    public function __construct(ProdutoImagemService $produtoImagemService)
     {
-        //
+        $this->produtoImagemService = $produtoImagemService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $produtoImagem = $this->produtoImagemService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $produtoImagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $produtoImagem = $this->produtoImagemService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'produtoImagem(s) buscado(s) com sucesso.',
+                'data' => $produtoImagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoImagem(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(ProdutoImagem $produtoImagem)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoImagem = $this->produtoImagemService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $produtoImagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produtoImagem(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ProdutoImagem $produtoImagem)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $produtoImagem = $this->produtoImagemService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $produtoImagem,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o produtoImagem.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, ProdutoImagem $produtoImagem)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ProdutoImagem $produtoImagem)
-    {
-        //
+            $produtoImagem = $this->produtoImagemService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $produtoImagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o produtoImagem.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

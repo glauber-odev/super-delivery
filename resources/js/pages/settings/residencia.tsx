@@ -13,12 +13,12 @@ import { Label } from '@/components/ui/label';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'Configurações da senha',
+        title: 'Suas Residencias',
         href: '/settings/password',
     },
 ];
 
-export default function Password() {
+export default function Residencia() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
 

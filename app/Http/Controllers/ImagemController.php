@@ -2,64 +2,107 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Imagem;
+use App\Services\ImagemService;
 use Illuminate\Http\Request;
 
 class ImagemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $imagemService;
+
+    public function __construct(ImagemService $imagemService)
     {
-        //
+        $this->imagemService = $imagemService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $imagem = $this->imagemService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $imagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $imagem = $this->imagemService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'imagem(s) buscado(s) com sucesso.',
+                'data' => $imagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) imagem(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Imagem $Imagem)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $imagem = $this->imagemService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $imagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) imagem(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Imagem $Imagem)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $imagem = $this->imagemService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $imagem,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o imagem.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Imagem $Imagem)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Imagem $Imagem)
-    {
-        //
+            $imagem = $this->imagemService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $imagem,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o imagem.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

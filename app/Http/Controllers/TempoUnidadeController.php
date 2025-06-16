@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TempoUnidade;
+use App\Services\CarrinhoService;
 use Illuminate\Http\Request;
 
 class TempoUnidadeController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+
+    protected $tempoUnidadeService;
+
+    public function __construct(CarrinhoService $tempoUnidadeService) {
+        $this->tempoUnidadeService = $tempoUnidadeService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $carrinho = $this->tempoUnidadeService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function findById(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(TempoUnidade $tempoUnidade)
-    {
-        //
-    }
+            $carrinho = $this->tempoUnidadeService->findById($request->all(), $id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TempoUnidade $tempoUnidade)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, TempoUnidade $tempoUnidade)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TempoUnidade $tempoUnidade)
-    {
-        //
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

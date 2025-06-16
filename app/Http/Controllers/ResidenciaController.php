@@ -3,63 +3,107 @@
 namespace App\Http\Controllers;
 
 use App\Models\Residencia;
+use App\Services\ResidenciaService;
 use Illuminate\Http\Request;
 
 class ResidenciaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $residenciaService;
+
+    public function __construct(ResidenciaService $residenciaService)
     {
-        //
+        $this->residenciaService = $residenciaService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $residencia = $this->residenciaService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $residencia = $this->residenciaService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'residencia(s) buscado(s) com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) residencia(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Residencia $residencia)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $residencia = $this->residenciaService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) residencia(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Residencia $residencia)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $residencia = $this->residenciaService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $residencia,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o residencia.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Residencia $residencia)
+    public function delete(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Residencia $residencia)
-    {
-        //
+            $residencia = $this->residenciaService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o residencia.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

@@ -2,64 +2,51 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Estado;
+use App\Services\EstadoService;
 use Illuminate\Http\Request;
 
 class EstadoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+
+    protected $estadoService;
+
+    public function __construct(EstadoService $estadoService) {
+        $this->estadoService = $estadoService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $carrinho = $this->estadoService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function findById(Request $request, $id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Estado $estado)
-    {
-        //
-    }
+            $carrinho = $this->estadoService->findById($request->all(), $id);
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Estado $estado)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Estado $estado)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Estado $estado)
-    {
-        //
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 }

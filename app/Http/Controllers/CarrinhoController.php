@@ -2,64 +2,108 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Carrinho;
+use App\Services\CarrinhoService;
 use Illuminate\Http\Request;
 
 class CarrinhoController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+
+    protected $carrinhoService;
+
+    public function __construct(CarrinhoService $carrinhoService)
     {
-        //
+        $this->carrinhoService = $carrinhoService;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function create(Request $request)
     {
-        //
+        try {
+
+            $carrinho = $this->carrinhoService->create($request->all());
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function fetch(Request $request)
     {
-        //
+        try {
+
+            $carrinho = $this->carrinhoService->fetch($request->all());
+
+            return response()->json([
+                'message' => 'carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Carrinho $carrinho)
+    public function findById(Request $request, $id)
     {
-        //
+        try {
+
+            $carrinho = $this->carrinhoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Carrinho $carrinho)
+
+    public function update(Request $request, $id)
     {
-        //
+        try {
+
+            $carrinho = $this->carrinhoService->findById($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'data' => $carrinho,
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao atualizar o carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Carrinho $carrinho)
+    public function delete(Request $request, $id)
     {
-        //
+        try {
+
+            $carrinho = $this->carrinhoService->delete($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Carrinho exluído com sucesso.',
+                'data' => $carrinho,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao excluir o carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Carrinho $carrinho)
-    {
-        //
-    }
 }
