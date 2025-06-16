@@ -9,5 +9,14 @@ Route::middleware('auth')->group(function () {
 
     Route::get('settings/residencia', function () {
         return Inertia::render('settings/residencia');
-    })->name('residencia');
+    })->name('settings.residencia');
+
+
+
+    /** --------------------------------------
+     *  Produto
+     *  -------------------------------------- */
+    Route::get('produtos/create', function () {
+        return Inertia::render('produtos/create');
+    })->name('produtos.create');
 });
