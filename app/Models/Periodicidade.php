@@ -8,6 +8,14 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Periodicidade extends Model
 {
 
+    protected $fillable = [
+        'id',
+        'descricao',
+    ];
+
+    const SEMANAL = 1;
+    const MENSAL = 2;
+
     protected $table = 'periodicidades';
 
     public function PedidoProgramado(): HasMany

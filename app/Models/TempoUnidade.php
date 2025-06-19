@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TempoUnidade extends Model
 {
-
+    protected $fillable = [
+        'unidade',
+        'posicao_ordem',
+        'periodicidade_id'
+    ];
+    
     protected $table = 'tempo_unidades';
 
     public function pedidosProgramados(): HasMany

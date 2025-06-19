@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class PedidoStatus extends Model
 {
 
+    protected $fillable = [
+        'id',
+        'descricao',
+        'sigla',
+    ];
+
     protected $table = 'pedidos_status';
 
     public function historico(): HasMany

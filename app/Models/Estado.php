@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Estado extends Model
 {
 
+    protected $fillable = [
+        'id',
+        'sigla',
+        'descricao'
+    ];
+    
     protected $table = 'estados';
 
     public function residencias(): HasMany

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tempo_unidades', function (Blueprint $table) {
-            $table->integer('id')->primary();
+            $table->id();
             $table->string('unidade'); // pode receber dias do Mês ou da Semana
             $table->integer('posicao_ordem'); // Posição na fila
             $table->integer('periodicidade_id');

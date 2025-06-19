@@ -16,7 +16,13 @@ Route::middleware('auth')->group(function () {
     /** --------------------------------------
      *  Produto
      *  -------------------------------------- */
-    Route::get('produtos/create', function () {
+    Route::get('/produtos', function () {
+        return Inertia::render('produtos/index');
+    })->name('produtos.index');
+    Route::get('/produtos/create', function () {
         return Inertia::render('produtos/create');
     })->name('produtos.create');
+    Route::get('/produtos/manage', function () {
+        return Inertia::render('produtos/manage');
+    })->name('produtos.manage');
 });
