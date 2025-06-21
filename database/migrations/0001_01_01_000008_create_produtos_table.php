@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('produtos', function (Blueprint $table) {
             $table->id();
-            $table->integer('cod_produto');
+            $table->string('cod_barras')->nullable();
             $table->string('nome');
             $table->float('preco');
             $table->integer('saldo')->nullable();

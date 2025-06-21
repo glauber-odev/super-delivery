@@ -1,5 +1,4 @@
-// import Header from '@/components/header';
-import { Categoria } from '@/types/api';
+import { Categoria, ProdutoDataGrid } from '@/types/api';
 import { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,64 +14,88 @@ import React, { ChangeEvent, useCallback, useRef, useState } from 'react';
 import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import { NumericFormat } from 'react-number-format';
 
-type FormCreateProps = {
+type FormEditProps = {
     categorias: Categoria[] | null;
+    produto: ProdutoDataGrid | null | undefined;
+    handleClose: () => void ;
     fetchProdutos: () => void;
     handleSnackbar: (message?: string, severity?: AlertColor, autoHideDuration?: number, openSnackbar?: boolean) => void;
 };
 
 type FormValues = {
-    nome: string | null;
+    id: string | null | undefined
+    nome: string | null | undefined;
     preco: string | number | undefined;
-    cod_barras: string | null;
-    saldo: number | null;
+    cod_barras: string | null | undefined;
+    saldo: number | null | undefined;
     categoria_id: number | undefined;
-    descricao: string | null;
+    descricao: string | null | undefined;
     imagem: File | null;
 };
 
-const initialValues: FormValues = {
-    nome: null,
-    preco: '',
-    saldo: null,
-    cod_barras: null,
-    categoria_id: 1,
-    descricao: '',
-    imagem: null,
-};
 
-const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, handleSnackbar }) => {
+const FormEdit: React.FC<FormEditProps> = ({ categorias, produto, handleClose, fetchProdutos, handleSnackbar }) => {
     const {
         // reset,
         control,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormValues>();
-    const [data, setData] = useState<FormValues>(initialValues);
-    const [preco, setPreco] = useState<number | undefined>(0.0);
+    } = useForm<FormValues>({
+        defaultValues: {
+            nome: produto?.nome,
+            preco: produto?.preco ,
+            saldo: produto?.saldo,
+            cod_barras: produto?.cod_barras,
+            categoria_id: produto?.categoria_id,
+            descricao: produto?.descricao,
+            imagem: null,
+        }
+    });
+
+    console.log(produto?.produto_imagem?.imagens?.nome_original);
+
+
+    const [data, setData] = useState<FormValues>();
+    const [preco, setPreco] = useState<number | undefined>(Number(produto?.preco));
     const [file, setFile] = useState<File | null>(null);
+    const [imagemId] = useState<string | null>(String(produto?.produto_imagem?.imagens?.id));
     const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-    const onSubmit: SubmitHandler<FormValues> = useCallback(
-        async (data: FormValues) => {
-            setData({ ...data, preco: preco, imagem: file });
 
-            const formData = new FormData();
-            formData.set('nome', data.nome || '');
-            formData.set('preco', preco?.toString() || '');
-            formData.set('saldo', data.saldo?.toString() || '');
-            formData.set('cod_barras', data.cod_barras?.toString() || '');
-            formData.set('categoria_id', data.categoria_id?.toString() || '');
-            formData.set('descricao', data.descricao || '');
-            formData.set('imagem', file || '');
+    const onSubmit: SubmitHandler<FormValues> = useCallback( async (data: FormValues) => {
+        setData({ ...data, preco: preco, imagem: file });
 
-            try {
-                const response = await axios.post('/api/produtos', formData);
+        const formData = new FormData();
+        formData.set('id', String(produto?.id) || '');
+        formData.set('nome',data.nome || '');
+        formData.set('preco', preco?.toString() || '');
+        formData.set('saldo',data.saldo?.toString() || '');
+        formData.set('cod_barras',data.cod_barras?.toString() || '');
+        formData.set('categoria_id',data.categoria_id?.toString() || '');
+        formData.set('descricao',data.descricao || '');
+        formData.set('imagem_id', file ? imagemId || '' : '');
+        formData.set('_method', 'PUT');
+
+        if (file) {
+            formData.set('imagem', file);
+        }
+
+        try {
+
+            const response = await axios.post('/api/produtos/'+produto?.id, formData
+                ,{
+                    headers: {
+                    'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
 
                 if (response.status == 200 || response.status == 201) {
                     fetchProdutos();
                     handleSnackbar(response.data?.message);
-                    console.log('Cadastrado com sucesso');
+                    handleClose();
+                    console.log('Editado com sucesso');
                     console.log(response);
                 } else {
                     fetchProdutos();
@@ -83,13 +106,12 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
                 console.log(error);
                 handleSnackbar('Ocorreu algum erro, tente mais tarde.', 'error');
             }
-        },
-        [data, preco, file],
-    );
+
+    },[data, preco, file, imagemId]);
+
 
     const handleChangeFile = (e: ChangeEvent<HTMLInputElement>) => {
         const files = e.currentTarget.files;
-        console.log(files);
         if (files) setFile(files[0]);
     };
 
@@ -104,7 +126,7 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
     return (
         <>
             <FormControl fullWidth sx={{ alignItems: 'center' }}>
-                <Paper sx={{ width: '80%', padding: 3 }}>
+                <Paper sx={{ width: '100%', padding: 3 }}>
                     <Typography variant="h6" sx={{ mb: 2 }}>
                         Cadastrar Produto
                     </Typography>
@@ -160,7 +182,7 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
                                 <Controller
                                     name="preco"
                                     control={control}
-                                    defaultValue={''}
+                                    defaultValue={produto?.preco}
                                     // rules={{ required: 'O preco é necessário' }}
                                     render={({ field }) => (
                                         <NumericFormat
@@ -212,7 +234,7 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
                                 <>
                                     <TextField
                                         name="imagem"
-                                        value={file?.name}
+                                        value={file ? file?.name : produto?.produto_imagem?.imagens?.nome_original}
                                         label="Imagem do produto"
                                         fullWidth
                                         onClick={handleChooseFile}
@@ -249,8 +271,11 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
                             </Grid>
                         </Grid>
                         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'end', mt: 1 }}>
-                            <Button color="primary" variant="contained" type="submit">
-                                Cadastrar
+                            <Button color="error" variant="outlined" type="submit" onClick={handleClose} >
+                                Cancelar
+                            </Button>
+                            <Button color="primary" variant="contained" type="submit" sx={{ ml: 2 }}>
+                                Editar
                             </Button>
                         </Box>
                     </form>
@@ -260,4 +285,4 @@ const FormCreate: React.FC<FormCreateProps> = ({ categorias, fetchProdutos, hand
     );
 };
 
-export default FormCreate;
+export default FormEdit;

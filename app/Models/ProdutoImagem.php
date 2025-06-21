@@ -5,19 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class ProdutoImagem extends Model
 {
+    public $timestamps = false;
+
+    protected $fillable = [
+        'posicao_lista',
+        'imagem_id',
+    ];
 
     protected $table = 'produtos_imagens';
 
-    public function imagens(): HasMany
+    // TODO: errado
+    public function imagens(): BelongsTo
     {
-        return $this->hasMany(Imagem::class, 'imagem_id', 'id');
+        return $this->belongsTo(Imagem::class, 'imagem_id', 'id');
     }
 
-    public function produto(): BelongsTo
+    public function produto(): HasOne
     {
-        return $this->belongsTo(Produto::class, 'id', 'produto_imagem_id');
+        return $this->HasOne(Produto::class, 'id', 'produto_imagem_id');
     }
 }

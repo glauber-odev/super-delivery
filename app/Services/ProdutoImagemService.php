@@ -13,9 +13,9 @@ class ProdutoImagemService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = ProdutoImagem::create($request);
+            $produtoImagem = ProdutoImagem::create($request);
 
-            return $carrinho;
+            return $produtoImagem;
         });
     }
 
@@ -23,11 +23,11 @@ class ProdutoImagemService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = ProdutoImagem::all();
+            $produtoImagems = ProdutoImagem::all();
 
-            if($carrinhos == null) throw new FileNotFoundException('Nenhum ProdutoImagem foi encontrado.');
+            if($produtoImagems == null) throw new FileNotFoundException('Nenhum ProdutoImagem foi encontrado.');
 
-            return $carrinhos;
+            return $produtoImagems;
         });
     }
 
@@ -35,11 +35,11 @@ class ProdutoImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = ProdutoImagem::find($id);
+            $produtoImagem = ProdutoImagem::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('o ProdutoImagem não foi encontrado.');
+            if($produtoImagem == null) throw new FileNotFoundException('o ProdutoImagem não foi encontrado.');
 
-            return $carrinho;
+            return $produtoImagem;
         });
     }
 
@@ -47,9 +47,9 @@ class ProdutoImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = ProdutoImagem::where('id', $id)->update($request);
+            $produtoImagem = ProdutoImagem::where('id', $id)->update($request);
 
-            return $carrinho;
+            return $produtoImagem;
         });
     }
 
@@ -57,10 +57,10 @@ class ProdutoImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = ProdutoImagem::findOrFail($id);
-            $carrinho->delete();
+            $produtoImagem = ProdutoImagem::findOrFail($id);
+            $produtoImagem->delete();
 
-            return $carrinho;
+            return $produtoImagem;
         });
     }
 

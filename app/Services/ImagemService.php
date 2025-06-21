@@ -4,18 +4,30 @@ namespace App\Services;
 
 use App\Models\Imagem;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
+use Illuminate\Http\Request;
+use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ImagemService
 {
 
-    public function create($request)
+    public function create(UploadedFile $request)
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = Imagem::create($request);
+            $nome_original = $request->getClientOriginalName();
+            $extensao      = $request->getClientOriginalExtension();
+            $uploadName    = md5(uniqid(rand(), true)) . '.' . $extensao;
 
-            return $carrinho;
+            Storage::disk('public')->putFileAs("images/produtos", $request, $uploadName);
+
+            $imagem = Imagem::create([
+                'nome_original' => $nome_original,
+                'caminho_arquivo' => $uploadName,
+            ]);
+
+            return $imagem;
         });
     }
 
@@ -23,11 +35,11 @@ class ImagemService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Imagem::all();
+            $imagems = Imagem::all();
 
-            if($carrinhos == null) throw new FileNotFoundException('Nenhum Imagem foi encontrado.');
+            if ($imagems == null) throw new FileNotFoundException('Nenhum Imagem foi encontrado.');
 
-            return $carrinhos;
+            return $imagems;
         });
     }
 
@@ -35,11 +47,11 @@ class ImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Imagem::find($id);
+            $imagem = Imagem::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('o Imagem não foi encontrado.');
+            if ($imagem == null) throw new FileNotFoundException('o Imagem não foi encontrado.');
 
-            return $carrinho;
+            return $imagem;
         });
     }
 
@@ -47,9 +59,31 @@ class ImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Imagem::where('id', $id)->update($request);
+            $imagem = Imagem::find($id);
 
-            return $carrinho;
+            // verifica se já possui imagem
+            if(!empty($imagem)) {
+                $path = "imagens/produtos/".$imagem->caminho_arquivo;
+
+                if(Storage::exists($path)) {
+                    Storage::disk('public')->delete($path);
+                }
+
+            } else {
+                $imagem = new Imagem();
+            }
+
+            $nome_original = $request->getClientOriginalName();
+            $extensao      = $request->getClientOriginalExtension();
+            $uploadName    = md5(uniqid(rand(), true)) . '.' . $extensao;
+
+            Storage::disk('public')->putFileAs("images/produtos", $request, $uploadName);
+
+            $imagem->nome_original = $nome_original;
+            $imagem->caminho_arquivo = $uploadName;
+            $imagem->save();
+
+            return $imagem;
         });
     }
 
@@ -57,11 +91,10 @@ class ImagemService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Imagem::findOrFail($id);
-            $carrinho->delete();
+            $imagem = Imagem::findOrFail($id);
+            $imagem->delete();
 
-            return $carrinho;
+            return $imagem;
         });
     }
-
 }

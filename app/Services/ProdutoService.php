@@ -6,16 +6,44 @@ use App\Models\Produto;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
 
+
 class ProdutoService
 {
+
+    protected $imagemService;
+    protected $produtoImagemService;
+
+    public function __construct(ImagemService $imagemService, ProdutoImagemService $produtoImagemService)
+    {
+        $this->imagemService = $imagemService;
+        $this->produtoImagemService = $produtoImagemService;
+    }
 
     public function create($request)
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = Produto::create($request);
+            $produtoRequest = $request->except(['imagem']);
 
-            return $carrinho;
+            $produto = new Produto($produtoRequest);
+
+            // adiciona a imagem caso haja
+            if ($request->hasFile('imagem')) {
+
+                $imagemRequest = $request->file('imagem');
+                $imagem = $this->imagemService->create($imagemRequest);
+
+                $produtoImagem = $this->produtoImagemService->create([
+                    'posicao_lista' => 1,
+                    'imagem_id' => $imagem->id
+                ]);
+
+                $produto->produto_imagem_id = $produtoImagem->id;
+            }
+
+            $produto->save();
+
+            return $produto;
         });
     }
 
@@ -23,11 +51,11 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Produto::all();
+            $produtos = Produto::with(['categoria','produtoImagem.imagens'])->get();
 
-            if($carrinhos == null) throw new FileNotFoundException('Nenhum Produto foi encontrado.');
+            if ($produtos == null) throw new FileNotFoundException('Nenhum Produto foi encontrado.');
 
-            return $carrinhos;
+            return $produtos;
         });
     }
 
@@ -35,11 +63,11 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Produto::find($id);
+            $produto = Produto::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('o Produto não foi encontrado.');
+            if ($produto == null) throw new FileNotFoundException('o Produto não foi encontrado.');
 
-            return $carrinho;
+            return $produto;
         });
     }
 
@@ -47,9 +75,32 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Produto::where('id', $id)->update($request);
+            $produtoRequest = $request->except(['imagem','imagem_id']);
+            $imagem_id = $request->input('imagem_id');
 
-            return $carrinho;
+            $produto = Produto::findOrFail($id);
+            $produto->fill($produtoRequest);
+
+            // adiciona a imagem caso haja
+            if ($request->hasFile('imagem')) {
+
+                $imagemRequest = $request->file('imagem');
+                $imagem = $this->imagemService->update($imagemRequest, $imagem_id);
+
+                if(!empty($request->imagem_id)) {
+                    $produtoImagem = $this->produtoImagemService->create([
+                    'posicao_lista' => 1,
+                    'imagem_id' => $imagem->id
+                    ]);
+                }
+
+                $produto->produto_imagem_id = $produtoImagem->id;
+
+            }
+
+            $produto->save();
+
+            return $produto;
         });
     }
 
@@ -57,11 +108,10 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Produto::findOrFail($id);
-            $carrinho->delete();
+            $produto = Produto::findOrFail($id);
+            $produto->delete();
 
-            return $carrinho;
+            return $produto;
         });
     }
-
 }

@@ -4,14 +4,20 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Imagem extends Model
 {
 
+    protected $fillable = [
+        'nome_original',
+        'caminho_arquivo',
+    ];
+
     protected $table = 'imagens';
 
-    public function produtoImagem(): BelongsTo
+    public function produtoImagem(): HasMany
     {
-        return $this->belongsTo(ProdutoImagem::class, 'id', 'imagem_id');
+        return $this->hasMany(ProdutoImagem::class, 'id', 'imagem_id');
     }
 }

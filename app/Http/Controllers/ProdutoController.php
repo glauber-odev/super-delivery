@@ -19,15 +19,15 @@ class ProdutoController extends Controller
     {
         try {
 
-            $produto = $this->produtoService->create($request->all());
+            $produto = $this->produtoService->create($request);
 
             return response()->json([
-                'message' => 'Carrinho criado com sucesso.',
+                'message' => 'Produto criado com sucesso.',
                 'data' => $produto,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao criar o Carrinho.',
+                'error' => 'Erro ao criar o Produto.',
                 'details' => $e->getMessage()
             ], 500);
         }
@@ -58,7 +58,7 @@ class ProdutoController extends Controller
             $produto = $this->produtoService->findById($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'message' => 'Produto(s) buscado(s) com sucesso.',
                 'data' => $produto,
             ], 201);
         } catch (\Exception $e) {
@@ -74,10 +74,10 @@ class ProdutoController extends Controller
     {
         try {
 
-            $produto = $this->produtoService->findById($request->all(), $id);
+            $produto = $this->produtoService->update($request, $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'message' => 'Produto(s) atualizado(s) com sucesso.',
                 'data' => $produto,
             ], 200);
         } catch (\Exception $e) {
@@ -95,7 +95,7 @@ class ProdutoController extends Controller
             $produto = $this->produtoService->delete($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho exluído com sucesso.',
+                'message' => 'Produto exluído com sucesso.',
                 'data' => $produto,
             ], 201);
         } catch (\Exception $e) {
