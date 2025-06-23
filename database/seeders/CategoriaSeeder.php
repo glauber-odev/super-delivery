@@ -14,30 +14,22 @@ class CategoriaSeeder extends Seeder
      */
     public function run(): void
     {
-            Categoria::insert([
+        Categoria::insert([
             [
-                'descricao' => 'Hortifruti',
-                'prefix_categoria' => 'HOR',
-            ],
-            [
-                'descricao' => 'Carnes e Aves',
-                'prefix_categoria' => 'CAR',
-            ],
-            [
-                'descricao' => 'Padaria',
-                'prefix_categoria' => 'PAD',
+                'descricao' => 'Mercearia',
+                'prefix_categoria' => 'MER',
             ],
             [
                 'descricao' => 'Bebidas',
                 'prefix_categoria' => 'BEB',
             ],
             [
-                'descricao' => 'Limpeza',
-                'prefix_categoria' => 'LIM',
+                'descricao' => 'Carnes',
+                'prefix_categoria' => 'CAR',
             ],
             [
-                'descricao' => 'Higiene Pessoal',
-                'prefix_categoria' => 'HIG',
+                'descricao' => 'Limpeza',
+                'prefix_categoria' => 'LIM',
             ],
             [
                 'descricao' => 'Laticínios',
@@ -48,8 +40,12 @@ class CategoriaSeeder extends Seeder
                 'prefix_categoria' => 'CON',
             ],
             [
-                'descricao' => 'Mercearia',
-                'prefix_categoria' => 'MER',
+                'descricao' => 'Hortifruti',
+                'prefix_categoria' => 'HOR',
+            ],
+            [
+                'descricao' => 'Bomboniere',
+                'prefix_categoria' => 'BOM',
             ],
             [
                 'descricao' => 'Outros',

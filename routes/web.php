@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\CarrinhoProdutoController;
 use App\Http\Controllers\CategoriaController;
 use App\Http\Controllers\ImagemController;
 use App\Http\Controllers\PedidoController;
@@ -39,6 +40,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/{id}', [CarrinhoController::class, 'update'])->name('api.carrinhos.update');
             Route::patch('/{id}', [CarrinhoController::class, 'update'])->name('api.carrinhos.update');
             Route::delete('/{id}', [CarrinhoController::class, 'delete'])->name('api.carrinhos.delete');
+
+            Route::post('/produtos/{produtoId}', [CarrinhoController::class, 'addOrEditProduto'])->name('api.add-or-edit-produto');
+            Route::post('{carrinhoId}/produtos/{produtoId}', [CarrinhoController::class, 'attachOrUpdateProdutoByCarrinhoId'])->name('api.attach-or-update-produto-by-carrinho-id');
 
         });
 
@@ -166,6 +170,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::patch('/{id}', [ProdutoController::class, 'update'])->name('api.produtos.update');
             Route::delete('/{id}', [ProdutoController::class, 'delete'])->name('api.produtos.delete');
 
+            Route::get('/categoria/{categoriaId}', [ProdutoController::class, 'fetchByCategoriaId'])->name('api.produtos.fetch-by-categoria-id');
+
         });
 
         /** --------------------------------------
@@ -238,11 +244,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         });
 
+        
+        /** --------------------------------------
+         *  CarrinhoProduto
+         *  -------------------------------------- */
+        Route::prefix('/carrinhos-produtos')->group(function () {
+
+            Route::post('/', [CarrinhoProdutoController::class, 'create'])->name('api.carrinhos-produtos.create');
+            Route::get('/', [CarrinhoProdutoController::class, 'fetch'])->name('api.carrinhos-produtos.fetch');
+            Route::get('/{id}', [CarrinhoProdutoController::class, 'findById'])->name('api.carrinhos-produtos.find-by-id');
+            Route::put('/{id}', [CarrinhoProdutoController::class, 'update'])->name('api.carrinhos-produtos.update');
+            Route::patch('/{id}', [CarrinhoProdutoController::class, 'update'])->name('api.carrinhos-produtos.update');
+            Route::delete('/{id}', [CarrinhoProdutoController::class, 'delete'])->name('api.carrinhos-produtos.delete');
+
+        });
+
     });
 });
-
-            // Produtos
-            // Route::get('/{idCarrinho}/produtos/{idProduto}/eu/{id3}',[CarrinhoController::class, 'findById'])->name('api.carrinhos.produtos.find-by-id');
 
 require __DIR__ . '/settings.php';
 require __DIR__ . '/auth.php';

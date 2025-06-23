@@ -9,12 +9,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Carrinho extends Model
 {
 
-    // protected $atrributes = [
-    //     'titulo',
-    //     'total',
-    //     'flg_favorito',
-    //     'user_id',
-    // ];
+    protected $fillable = [
+        'titulo',
+        'total',
+        'flg_favorito',
+        'user_id',
+    ];
 
     protected $table = 'carrinhos';
 
@@ -31,5 +31,10 @@ class Carrinho extends Model
     public function usersFavoritaram(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
+    public function carrinhoProdutos(): BelongsTo
+    {
+        return $this->belongsTo(CarrinhoProduto::class, 'id', 'carrinho_id');
     }
 }

@@ -13,9 +13,9 @@ class PedidoProdutoService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = PedidoProduto::create($request);
+            $carrinhoProduto = PedidoProduto::create($request);
 
-            return $carrinho;
+            return $carrinhoProduto;
         });
     }
 
@@ -35,11 +35,11 @@ class PedidoProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = PedidoProduto::find($id);
+            $carrinhoProduto = PedidoProduto::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('o PedidoProduto não foi encontrado.');
+            if($carrinhoProduto == null) throw new FileNotFoundException('o PedidoProduto não foi encontrado.');
 
-            return $carrinho;
+            return $carrinhoProduto;
         });
     }
 
@@ -47,9 +47,9 @@ class PedidoProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = PedidoProduto::where('id', $id)->update($request);
+            $carrinhoProduto = PedidoProduto::where('id', $id)->update($request);
 
-            return $carrinho;
+            return $carrinhoProduto;
         });
     }
 
@@ -57,10 +57,10 @@ class PedidoProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = PedidoProduto::findOrFail($id);
-            $carrinho->delete();
+            $carrinhoProduto = PedidoProduto::findOrFail($id);
+            $carrinhoProduto->delete();
 
-            return $carrinho;
+            return $carrinhoProduto;
         });
     }
 

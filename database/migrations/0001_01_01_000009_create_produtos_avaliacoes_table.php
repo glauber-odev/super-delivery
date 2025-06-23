@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->float('nota');
             $table->string('titulo')->nullable();
-            $table->string('descricao')->nullable();
+            $table->string('descricao', 500)->nullable();
             $table->bigInteger('produto_id');
             $table->bigInteger('user_id');
             $table->timestamps();

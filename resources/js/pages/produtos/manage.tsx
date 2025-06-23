@@ -1,3 +1,4 @@
+import Footer from '@/components/footer';
 import Header from '@/components/header';
 import DataGridManage from '@/components/produtos/DataGridManage/DataGridManage';
 import FormCreate from '@/components/produtos/FormCreate/FormCreate';
@@ -88,6 +89,8 @@ export default function Manage() {
                     {message}
                 </Alert>
             </Snackbar>
+
+            <Footer />
         </>
     );
 }

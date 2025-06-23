@@ -3,11 +3,18 @@
 namespace App\Services;
 
 use App\Models\Carrinho;
+use App\Models\CarrinhoProduto;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
 
 class CarrinhoService
 {
+
+    protected $carrinhoProduto;
+
+    public function __construct(CarrinhoProdutoService $carrinhoProduto) {
+        $this->carrinhoProduto = $carrinhoProduto;
+    }
 
     public function create($request)
     {
@@ -61,6 +68,40 @@ class CarrinhoService
             $carrinho->delete();
 
             return $carrinho;
+        });
+    }
+
+    public function addOrEditProdutosByCarrinhoId($request, $id, $idProduto)
+    {
+        return DB::transaction(function () use ($request, $id, $idProduto) {
+
+            $quantidade = $request->input('quantidade');
+
+            $carrinhoProduto = $this->carrinhoProduto->findByCarrinhoAndProdutoId(null, $id, $idProduto) ?? new CarrinhoProduto();
+            $carrinhoProduto->quantidade = $quantidade;
+
+            $carrinhoProduto->save();            
+
+            return $carrinhoProduto;
+        });
+    }
+
+    public function attachOrUpdateProdutoByCarrinhoId($request, $id, $idProduto)
+    {
+        return DB::transaction(function () use ($request, $id, $idProduto) {
+
+            $quantidade = $request->input('quantidade');
+
+            $carrinhoProduto = $this->carrinhoProduto->findByCarrinhoAndProdutoId(null, $id, $idProduto) ?? new CarrinhoProduto();
+            $carrinhoProduto->quantidade = $quantidade;
+
+            if($quantidade == 0){
+                $carrinhoProduto->delete();                
+            } else {
+                $carrinhoProduto->save();
+            }
+
+            return $carrinhoProduto;
         });
     }
 

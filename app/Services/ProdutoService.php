@@ -51,7 +51,7 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request) {
 
-            $produtos = Produto::with(['categoria','produtoImagem.imagens'])->get();
+            $produtos = Produto::with(['categoria', 'produtoImagem.imagens'])->orderBy('id', 'DESC')->get();
 
             if ($produtos == null) throw new FileNotFoundException('Nenhum Produto foi encontrado.');
 
@@ -63,7 +63,7 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $produto = Produto::find($id);
+            $produto = Produto::with(['categoria', 'produtoImagem.imagens', 'avaliacoes'])->find($id);
 
             if ($produto == null) throw new FileNotFoundException('o Produto não foi encontrado.');
 
@@ -75,7 +75,7 @@ class ProdutoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $produtoRequest = $request->except(['imagem','imagem_id']);
+            $produtoRequest = $request->except(['imagem', 'imagem_id']);
             $imagem_id = $request->input('imagem_id');
 
             $produto = Produto::findOrFail($id);
@@ -87,15 +87,14 @@ class ProdutoService
                 $imagemRequest = $request->file('imagem');
                 $imagem = $this->imagemService->update($imagemRequest, $imagem_id);
 
-                if(!empty($request->imagem_id)) {
+                if (!empty($request->imagem_id)) {
                     $produtoImagem = $this->produtoImagemService->create([
-                    'posicao_lista' => 1,
-                    'imagem_id' => $imagem->id
+                        'posicao_lista' => 1,
+                        'imagem_id' => $imagem->id
                     ]);
                 }
 
                 $produto->produto_imagem_id = $produtoImagem->id;
-
             }
 
             $produto->save();
@@ -114,4 +113,21 @@ class ProdutoService
             return $produto;
         });
     }
+
+    public function fetchByCategoriaId($request, $categoriaId)
+    {
+        return DB::transaction(function () use ($request, $categoriaId) {
+
+            $produtos = Produto::with(['categoria', 'produtoImagem.imagens'])
+                ->where('categoria_id', $categoriaId)
+                ->orderBy('id', 'DESC')
+                ->get();
+
+            if ($produtos == null) throw new FileNotFoundException('Nenhum Produto foi encontrado.');
+
+            return $produtos;
+
+        });
+    }
+    
 }

@@ -1,7 +1,5 @@
 <?php
 
-use App\Http\Controllers\Settings\PasswordController;
-use App\Http\Controllers\Settings\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,13 +14,22 @@ Route::middleware('auth')->group(function () {
     /** --------------------------------------
      *  Produto
      *  -------------------------------------- */
-    Route::get('/produtos', function () {
-        return Inertia::render('produtos/index');
-    })->name('produtos.index');
-    Route::get('/produtos/create', function () {
-        return Inertia::render('produtos/create');
-    })->name('produtos.create');
+    Route::get('/produtos/busca/{search}', function () {
+        return Inertia::render('produtos/busca');
+    })->name('produtos.busca');
+
     Route::get('/produtos/manage', function () {
         return Inertia::render('produtos/manage');
     })->name('produtos.manage');
+
+    Route::get('/produtos/categoria/{category1}', function ($categoriaParam) {
+        return Inertia::render('produtos/categoria',  [
+            "categoriaParam" => $categoriaParam,
+        ]);
+    })->name('produtos.categoria');
+
+    Route::get('/produtos/{id}', function () {
+        return Inertia::render('produtos/produto');
+    })->name('produtos.produto');
+
 });

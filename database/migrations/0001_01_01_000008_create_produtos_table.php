@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('nome');
             $table->float('preco');
             $table->integer('saldo')->nullable();
-            $table->string('descricao')->nullable();
+            $table->string('descricao', 3000)->nullable();
             $table->bigInteger('categoria_id')->nullable();
             $table->bigInteger('produto_imagem_id')->nullable();
             $table->timestamps();

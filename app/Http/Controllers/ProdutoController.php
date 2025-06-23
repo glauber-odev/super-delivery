@@ -105,4 +105,22 @@ class ProdutoController extends Controller
             ], 500);
         }
     }
+
+    public function fetchByCategoriaId(Request $request, string $categoriaId)
+    {
+        try {
+
+            $produto = $this->produtoService->fetchByCategoriaId($request->all(), $categoriaId);
+
+            return response()->json([
+                'message' => 'produto(s) buscado(s) com sucesso.',
+                'data' => $produto,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar o(s) produto(s).',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

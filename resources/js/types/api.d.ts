@@ -50,9 +50,43 @@ export interface ProdutoDataGrid extends Produto {
     // produto_imagem: ProdutoImagem[];
 };
 
+export interface ProdutoGrid extends Produto {
+    produto_imagem: ProdutoImagem;
+    // produto_imagem: ProdutoImagem[];
+};
+
 export interface SnackbarGlobalProps {
     message : string;
     severity: AlertColor;
     autoHideDuration: number;
     openSnackbar: boolean;
+}
+
+export interface Carrinho {
+    id?: number | string;
+    titulo: string | null;
+    total:  number | null;
+    flg_favorito: boolean | null;
+    user_id: number | null;
+}
+
+export interface CarrinhoProduto {
+    id?: string | number;
+    carrinho_id?: string | number;
+    produto_id?: string | number;
+    quantidade?: number | string;
+}
+
+export interface CarrinhoProdutoGrid extends CarrinhoProduto {
+    id?: string | number;
+    carrinho_id?: string | number;
+    produto_id?: string | number;
+}
+
+export interface CarrinhoGridProps extends Carrinho{
+    produtos?: CarrinhoProdutoGrid[];
+}
+
+export interface CarrinhoSession extends Carrinho {
+    produtos?: Produto[];
 }
