@@ -27,6 +27,7 @@ export interface Produto {
     categoria_id: number | undefined;
     descricao: string | null;
     imagem: File | null;
+    quantidade?: number | null;
 };
 
 export type Imagem = {
@@ -88,5 +89,17 @@ export interface CarrinhoGridProps extends Carrinho{
 }
 
 export interface CarrinhoSession extends Carrinho {
-    produtos?: Produto[];
+    produtos?: ProdutoWithImg[];
 }
+
+export type ProdutoWithImg = {
+    id?: number;
+    nome: string | null;
+    preco: string | number | undefined;
+    cod_barras: string | null;
+    saldo: number | null;
+    categoria_id: number | undefined;
+    descricao: string | null;
+    produto_imagem: ProdutoImagem | null;
+    quantidade?: number | null;
+};

@@ -1,3 +1,4 @@
+import CarrinhoDrawer from '@/components/carrinho/CarrinhoDrawer';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import GridProdutos from '@/components/produtos/GridProdutos/GridProdutos';
@@ -19,6 +20,21 @@ export default function Categoria() {
     const [autoHideDuration, setAutoHideDuration] = useState<number>(6000);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [carrinhoSession, setCarrinhoSession] = useState<CarrinhoSession>();
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    const toggleDrawer =
+    (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+            (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+        return;
+        }
+
+        setOpenDrawer(open);
+    };
 
     const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
         if (reason === 'clickaway') {
@@ -162,17 +178,14 @@ export default function Categoria() {
 
     return (
         <>
-            <Header />
-            
-            {carrinhoSession && carrinhoSession.produtos && carrinhoSession.produtos.length > 0 && (
-                carrinhoSession?.produtos?.map((produto) => {
-                    console.log(produto);
-                    return (
-                    <div>{produto.nome}</div>
+            <Header carrinho={carrinhoSession} toggleDrawer={toggleDrawer} />
 
-                    )
-                })
-            )}
+            <CarrinhoDrawer 
+            open={openDrawer} 
+            toggleDrawer={toggleDrawer}
+            carrinhoSession={carrinhoSession}
+            handlePushOrModifyProduto={handlePushOrModifyProduto}
+            />
 
             <Box sx={{ mt: 8 , mb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }} >
                 <Box sx={{ alignItems: 'center', width: '80%' , display: 'flex', justifyContent: 'center'  }} >

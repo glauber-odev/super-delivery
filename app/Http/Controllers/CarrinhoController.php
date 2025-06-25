@@ -111,9 +111,6 @@ class CarrinhoController extends Controller
     public function addOrEditProduto(Request $request, $produtoId)
     {
 
-        // session()->forget('carrinho');
-        // dd(session('carrinho'));
-
         $quantidade = $request->input('quantidade');
 
 
@@ -123,48 +120,49 @@ class CarrinhoController extends Controller
             $carrinhoSession['carrinho'] = [];
         }
 
-        $carrinhoProduto = new CarrinhoProduto(['quantidade' => $quantidade, 'produto_id' => $produtoId]);
-
         $produtos = isset($carrinhoSession['carrinho']['produtos']) ?  $carrinhoSession['carrinho']['produtos'] : [];
 
 
+        $carrinhoProduto = new CarrinhoProduto(['produto_id' => $produtoId, 'quantidade' => $quantidade,]);
         $produtoExiste = false;
         foreach ($produtos as $index => $produto) {
+
             if (isset($produto['produto_id']) && $produto['produto_id'] == $produtoId) {
-                //Remove
+                $produtoExiste = true;
+                // Remove
                 if ($quantidade == 0) {
                     unset($produtos[$index]);
                     unset($carrinhoSession['carrinho']['produtos'][$index]);
                 // Edit
                 } else {
-                    $produtoExiste = true;
-                    $produtos[$index] = $carrinhoProduto;
+
+                    $carrinhoSession['carrinho']['produtos'][$index] = $carrinhoProduto;
                 }
                 break; // Sai do loop se encontrou
             }
+
         }
 
         // Add
         if (!$produtoExiste) {
             $carrinhoSession['carrinho']['produtos'][] = $carrinhoProduto;
-            $produtos = $carrinhoSession['carrinho']['produtos'];
         }
-
-        session(['carrinho' => $carrinhoSession['carrinho']]);
+        $produtos = $carrinhoSession['carrinho']['produtos'];
 
         // Carrega saída
         $total = 0;
         foreach ($produtos as $index => $produto) {
-            $produto = Produto::find($produto['produto_id']);
-            $produto['quantidade'] = $quantidade;
-            $produtos[$index] = $produto;
-            $total += $quantidade * $produto['preco'];
+            $produtoResponse = Produto::with('produtoImagem.imagens')->find($produto['produto_id']);
+            $produtoResponse['quantidade'] = $carrinhoSession['carrinho']['produtos'][$index]['quantidade'];
+            $produtos[$index] = $produtoResponse;
+            $total += $produtos[$index]['quantidade'] * $produtos[$index]['preco'];
         }
 
-        $carrinhoResponse['carrinho']['total'] = $total;
+        $carrinhoSession['carrinho']['total'] = $total;
+        $carrinhoResponse = $carrinhoSession;
 
         session(['carrinho' => $carrinhoSession['carrinho']]);
-        
+
         $carrinhoResponse['carrinho']['produtos'] = array_values($produtos);
 
         return $carrinhoResponse;
