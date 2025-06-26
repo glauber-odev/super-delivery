@@ -20,4 +20,9 @@ class PedidoStatus extends Model
     {
         return $this->hasMany(PedidoHistorico::class, 'id', 'pedido_status_id');
     }
+
+    public function pedidos(): HasMany
+    {
+        return $this->hasMany(Pedido::class, 'id', 'pedido_status_id');
+    }
 }

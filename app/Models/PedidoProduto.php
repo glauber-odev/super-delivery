@@ -7,6 +7,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PedidoProduto extends Model
 {
+    protected $fillable = [
+        'id',
+        'pedido_id',
+        'produto_id',
+        'quantidade',
+    ];
 
     protected $table = 'tr_pedidos_produtos';
 

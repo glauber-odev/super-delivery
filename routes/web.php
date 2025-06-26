@@ -223,6 +223,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
             Route::post('/', [ResidenciaController::class, 'create'])->name('api.residencias.create');
             Route::get('/', [ResidenciaController::class, 'fetch'])->name('api.residencias.fetch');
+            Route::get('/buscar-dados-frete', [ResidenciaController::class, 'getFreteData'])->name('api.residencias.buscar-dados-frete');
             Route::get('/{id}', [ResidenciaController::class, 'findById'])->name('api.residencias.find-by-id');
             Route::put('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');
             Route::patch('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');

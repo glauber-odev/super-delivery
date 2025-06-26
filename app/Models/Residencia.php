@@ -9,6 +9,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Residencia extends Model
 {
 
+    protected $fillable = [
+        'cod_produto',
+        'rua',
+        'numero',
+        'complemento',
+        'bairro',
+        'cidade',
+        'cep',
+        'user_id',
+        'estado_id',
+    ];
+
+    const CEP_LOJA_MATRIZ = "72720-901";
+
     protected $table = 'residencias';
 
     public function user(): BelongsTo

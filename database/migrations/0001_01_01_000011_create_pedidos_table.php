@@ -17,9 +17,7 @@ return new class extends Migration
             $table->float('subtotal')->nullable(); //preço sem frete
             $table->float('total')->nullable();
             $table->boolean('flg_retirar_na_loja');
-            $table->integer('horas_estimadas_separacao')->nullable(); //horas, interessante para retirada na loja
             $table->integer('dias_estimados_entrega')->nullable(); //dias
-            $table->float('distancia')->nullable();
             $table->float('custo_frete')->nullable();
             $table->bigInteger('user_id')->nullable();
             $table->bigInteger('residencia_id')->nullable();

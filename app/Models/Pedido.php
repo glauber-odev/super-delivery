@@ -10,6 +10,17 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 class Pedido extends Model
 {
 
+    protected $fillable = [
+        'flg_pago',
+        'subtotal',
+        'total',
+        'flg_retirar_na_loja',
+        'dias_estimados_entrega',
+        'custo_frete',
+        'user_id',
+        'residencia_id',
+    ];
+
     protected $table = 'pedidos';
 
     public function user(): BelongsTo

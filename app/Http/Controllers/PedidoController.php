@@ -105,4 +105,23 @@ class PedidoController extends Controller
             ], 500);
         }
     }
+
+    
+    public function createByCarrinhoSession(Request $request)
+    {
+        try {
+
+            $pedido = $this->pedidoService->createByCarrinhoSession($request);
+
+            return response()->json([
+                'message' => 'Carrinho criado com sucesso.',
+                'data' => $pedido,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar o Carrinho.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

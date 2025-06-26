@@ -8,6 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PedidoHistorico extends Model
 {
 
+    protected $fillable = [
+        'id',
+        'pedido_id',
+        'pedidos_status_id'
+    ];
+
     protected $table = 'pedidos_historicos';
 
     public function produto(): BelongsTo

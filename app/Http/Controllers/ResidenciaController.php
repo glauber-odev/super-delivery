@@ -106,4 +106,22 @@ class ResidenciaController extends Controller
             ], 500);
         }
     }
+
+    public function getFreteData(Request $request)
+    {
+        try {
+            $to = $request->input('to');
+            $residencia = $this->residenciaService->getFreteData(Residencia::CEP_LOJA_MATRIZ, $to);
+
+            return response()->json([
+                'message' => 'Dados buscados com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar os dados o frete.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
 }

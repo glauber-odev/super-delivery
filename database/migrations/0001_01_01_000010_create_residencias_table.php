@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('residencias', function (Blueprint $table) {
             $table->id();
-            $table->integer('cod_produto');
             $table->string('rua')->nullable();
             $table->string('numero');
             $table->string('complemento')->nullable();
