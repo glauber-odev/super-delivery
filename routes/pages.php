@@ -36,7 +36,9 @@ Route::middleware('auth')->group(function () {
     })->name('produtos.produto');
 
     Route::get('/pedidos/realizar', function () {
-        return Inertia::render('pedidos/realizar');
+        return Inertia::render('pedidos/realizar',[
+            'userId' => Auth::id()
+        ]);
     })->name('pedidos.realizar');
 
 });

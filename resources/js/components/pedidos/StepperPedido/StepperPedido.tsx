@@ -6,16 +6,19 @@ import StepLabel from '@mui/material/StepLabel';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import FormResidencia from './Forms/FormResidencia';
+import { Residencia } from '@/types/api';
 
 const steps = ['Residência', 'Pedido(produtos/valor/quntetc.)', 'Realizar Pagamento'];
 
-export default function StepperPedido() {
+type StepperPedidoProps =  { 
+    residencias : Residencia[] | null;
+    residenciaId: number | null;
+    setResidenciaId: (id :number | null) => void;
+}
+
+export default function StepperPedido({ residencias, residenciaId, setResidenciaId } : StepperPedidoProps) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
-  const [residenciaId, setResidenciaId] = React.useState<number | null>(null);
-  const residencias = [{id: 1, rua: 'sela'},
-                        {id: 1, rua: 'sela'}]
-
 
   function formChooser(id: number) {
 

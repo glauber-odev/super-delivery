@@ -1,7 +1,7 @@
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import StepperPedido from '@/components/pedidos/StepperPedido/StepperPedido';
-import { CarrinhoSession, Categoria as CategoriaType, ProdutoDataGrid } from '@/types/api';
+import { CarrinhoSession, Categoria as CategoriaType, ProdutoDataGrid, Residencia } from '@/types/api';
 import { usePage } from '@inertiajs/react';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -9,7 +9,7 @@ import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function Realizar() {
+export default function Realizar({ userId } : { userId : number } ) {
     const { props } = usePage<{ categoriaParam : string}>();
     const categoriaParam = props.categoriaParam;
     const [produtos, setProdutos] = useState<ProdutoDataGrid[] | null>(null);
@@ -20,6 +20,23 @@ export default function Realizar() {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [carrinhoSession, setCarrinhoSession] = useState<CarrinhoSession>();
     const [openDrawer, setOpenDrawer] = useState(false);
+
+    const [residencias, setResidencias] = useState<Residencia[] | null>(null);
+    const [residenciaId, setResidenciaId] = useState<number | null>(null);
+
+    const fetchResidencias = useCallback(async () => {
+        try {
+            const response = await axios.get(`/api/residencias/users/${userId}`);
+            setResidencias(response?.data?.data);
+        } catch (error) {
+            console.error(error);
+            console.error(error);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        fetchResidencias();
+    },[]);
 
     const toggleDrawer =
     (open: boolean) =>
@@ -105,6 +122,8 @@ export default function Realizar() {
     //         return response;
     // }
 
+    
+
 
     return (
         <>
@@ -112,7 +131,10 @@ export default function Realizar() {
 
             <Box sx={{ mt: 8 , mb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }} >
                 <Box sx={{ alignItems: 'center', width: '80%' , display: 'flex', justifyContent: 'center'  }} >
-                    <StepperPedido />
+                    <StepperPedido 
+                    residencias={residencias}
+                    residenciaId={residenciaId} 
+                    setResidenciaId={setResidenciaId} />
                 </Box>
             </Box>
 

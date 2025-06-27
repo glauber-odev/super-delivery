@@ -1,7 +1,6 @@
+import ResidenciaItem from '@/components/shared/ResidenciaItem';
 import { Residencia } from '@/types/api';
 import { Box } from '@mui/material';
-import FormControl from '@mui/material/FormControl';
-import Grid from '@mui/material/Grid';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
@@ -14,13 +13,14 @@ type FormCreateProps = {
 };
 
 
+
 const FormResidencia: React.FC<FormCreateProps> = ({ residencias, residenciaId, setResidenciaId }) => {
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
                 <Box sx={{ height: '500px', width: '100%', padding: 3 }}>                
                     <Typography variant="body1" sx={{ mb: 2 , mt: '100px' }}>
-                        Esolha a residência de destino
+                        Escolha sua residência de destino
                     </Typography>
                         <TextField
                             fullWidth
@@ -39,20 +39,7 @@ const FormResidencia: React.FC<FormCreateProps> = ({ residencias, residenciaId, 
                         >
                             {residencias?.map((residencia) => (
                                 <MenuItem key={residencia.id} value={residencia?.id || undefined}>
-                                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                        <Typography>
-                                            {residencia.cep}
-                                        </Typography>
-                                        <Typography>
-                                                {String(residencia.estado)} - {residencia.cidade}
-                                        </Typography>
-                                    </Box>
-                                        <Typography>
-                                                {residencia.bairro} - {residencia.numero}
-                                        </Typography>
-                                        <Typography>
-                                                {residencia.complemento}
-                                        </Typography>
+                                    <ResidenciaItem residencia={residencia}/>
                                 </MenuItem>
                             ))}
                         </TextField>
