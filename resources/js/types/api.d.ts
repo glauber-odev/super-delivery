@@ -103,3 +103,21 @@ export type ProdutoWithImg = {
     produto_imagem: ProdutoImagem | null;
     quantidade?: number | null;
 };
+
+export interface Residencia {
+    id?: number | null;
+    rua: string | null;
+    numero: number | string | null;
+    complemento: string | null;
+    bairro: string | null;
+    cidade: string | null;
+    cep: string | null;
+    user_id: number | string | null;
+    estado: Estado;
+};
+
+export interface Estado {
+    id?: number | null;
+    sigla: string | null;
+    descricao: string | null;
+}

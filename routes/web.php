@@ -221,6 +221,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
          *  -------------------------------------- */
         Route::prefix('/residencias')->group(function () {
 
+            Route::prefix('/users')->group(function () {
+                Route::get('/{id}', [ResidenciaController::class, 'fetchResidenciaByUserId'])->name('api.fetch-residencia-by-user-id');
+                Route::post('/{id}', [ResidenciaController::class, 'createResidenciaByUserId'])->name('api.create-residencia-by-user-id');
+            });
+
             Route::post('/', [ResidenciaController::class, 'create'])->name('api.residencias.create');
             Route::get('/', [ResidenciaController::class, 'fetch'])->name('api.residencias.fetch');
             Route::get('/buscar-dados-frete', [ResidenciaController::class, 'getFreteData'])->name('api.residencias.buscar-dados-frete');
@@ -228,6 +233,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::put('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');
             Route::patch('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');
             Route::delete('/{id}', [ResidenciaController::class, 'delete'])->name('api.residencias.delete');
+
 
         });
 

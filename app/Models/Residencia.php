@@ -10,7 +10,6 @@ class Residencia extends Model
 {
 
     protected $fillable = [
-        'cod_produto',
         'rua',
         'numero',
         'complemento',

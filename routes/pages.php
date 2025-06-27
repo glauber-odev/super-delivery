@@ -1,12 +1,15 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::middleware('auth')->group(function () {
 
     Route::get('settings/residencia', function () {
-        return Inertia::render('settings/residencia');
+        return Inertia::render('settings/residencia', [
+            'userId' => Auth::id()
+        ]);
     })->name('settings.residencia');
 
 
@@ -31,5 +34,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/produtos/{id}', function () {
         return Inertia::render('produtos/produto');
     })->name('produtos.produto');
+
+    Route::get('/pedidos/realizar', function () {
+        return Inertia::render('pedidos/realizar');
+    })->name('pedidos.realizar');
 
 });

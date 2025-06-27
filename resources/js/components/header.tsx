@@ -106,7 +106,7 @@ function Header({ carrinho, toggleDrawer }: HeaderProps) {
 
                 {/* Right: Ícones */}
                 <Box sx={{ flex: 1, display: 'flex', justifyContent: 'flex-end' }}>
-                    <IconButton size="large" color="inherit" aria-label="Conta do usuário">
+                    <IconButton href='/settings/profile' size="large" color="inherit" aria-label="Conta do usuário">
                         <AccountCircleIcon />
                     </IconButton>
                     <IconButton onClick={toggleDrawer(true)} size="large" color="inherit" aria-label="Carrinho de compras">

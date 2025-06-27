@@ -64,4 +64,17 @@ class EstadoService
         });
     }
 
+    public function findBySigla($sigla)
+    {
+        return DB::transaction(function () use ($sigla) {
+
+            $carrinho = Estado::where('sigla', $sigla)->first();
+
+            if($carrinho == null) throw new FileNotFoundException('o Estado não foi encontrado.');
+
+            return $carrinho;
+            
+        });
+    }
+
 }

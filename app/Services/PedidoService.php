@@ -5,8 +5,6 @@ namespace App\Services;
 use App\Models\Pedido;
 use App\Models\PedidoHistorico;
 use App\Models\PedidoProduto;
-use App\Models\PedidoStatus;
-use App\Models\Produto;
 use App\Models\Residencia;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -125,6 +123,8 @@ class PedidoService
             // }
 
             $pedido->save();
+
+            session()->forget('carrinho');
 
             return $pedido;
         });

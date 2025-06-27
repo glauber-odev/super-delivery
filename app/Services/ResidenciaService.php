@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Residencia;
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -10,13 +11,19 @@ use Illuminate\Support\Facades\DB;
 class ResidenciaService
 {
 
+    protected $estadoService;
+
+    public function __construct(EstadoService $estadoService) {
+        $this->estadoService = $estadoService;
+    }
+
     public function create($request)
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = Residencia::create($request);
+            $residencia = Residencia::create($request);
 
-            return $carrinho;
+            return $residencia;
         });
     }
 
@@ -24,11 +31,11 @@ class ResidenciaService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Residencia::all();
+            $residencias = Residencia::all();
 
-            if ($carrinhos == null) throw new FileNotFoundException('Nenhum Residencia foi encontrado.');
+            if ($residencias == null) throw new FileNotFoundException('Nenhum Residencia foi encontrado.');
 
-            return $carrinhos;
+            return $residencias;
         });
     }
 
@@ -36,11 +43,11 @@ class ResidenciaService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Residencia::find($id);
+            $residencia = Residencia::find($id);
 
-            if ($carrinho == null) throw new FileNotFoundException('o Residencia não foi encontrado.');
+            if ($residencia == null) throw new FileNotFoundException('o Residencia não foi encontrado.');
 
-            return $carrinho;
+            return $residencia;
         });
     }
 
@@ -48,9 +55,9 @@ class ResidenciaService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Residencia::where('id', $id)->update($request);
+            $residencia = Residencia::where('id', $id)->update($request);
 
-            return $carrinho;
+            return $residencia;
         });
     }
 
@@ -58,10 +65,10 @@ class ResidenciaService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Residencia::findOrFail($id);
-            $carrinho->delete();
+            $residencia = Residencia::findOrFail($id);
+            $residencia->delete();
 
-            return $carrinho;
+            return $residencia;
         });
     }
 
@@ -131,5 +138,35 @@ class ResidenciaService
             throw $th;
             logger("Erro ao buscar o CEP: " . $th->getMessage());
         }
+    }
+    
+    public function createResidenciaByUserId($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+
+            User::findOrFail($id);
+            $request['user_id'] = $id;
+            $sigla = $request['uf'];
+
+            $estado = $this->estadoService->findBySigla($sigla);
+            $estadoId = $estado['id'];
+            $request['estado_id'] = $estadoId;
+
+            $residencia = Residencia::create($request);
+
+            return $residencia;
+        });
+    }
+    
+    public function fetchResidenciaByUserId($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+
+            $residencias = Residencia::where('user_id', $id)->with('estado')->get();
+
+            if ($residencias == null) throw new FileNotFoundException('Nenhum Residencia foi encontrado.');
+
+            return $residencias;
+        });
     }
 }

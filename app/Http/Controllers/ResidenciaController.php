@@ -23,12 +23,12 @@ class ResidenciaController extends Controller
             $residencia = $this->residenciaService->create($request->all());
 
             return response()->json([
-                'message' => 'Carrinho criado com sucesso.',
+                'message' => 'Residencia criado com sucesso.',
                 'data' => $residencia,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao criar o Carrinho.',
+                'error' => 'Erro ao criar o Residencia.',
                 'details' => $e->getMessage()
             ], 500);
         }
@@ -59,7 +59,7 @@ class ResidenciaController extends Controller
             $residencia = $this->residenciaService->findById($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'message' => 'Residencia(s) buscado(s) com sucesso.',
                 'data' => $residencia,
             ], 201);
         } catch (\Exception $e) {
@@ -78,7 +78,7 @@ class ResidenciaController extends Controller
             $residencia = $this->residenciaService->findById($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) atualizado(s) com sucesso.',
+                'message' => 'Residencia(s) atualizado(s) com sucesso.',
                 'data' => $residencia,
             ], 200);
         } catch (\Exception $e) {
@@ -96,7 +96,7 @@ class ResidenciaController extends Controller
             $residencia = $this->residenciaService->delete($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho exluído com sucesso.',
+                'message' => 'Residencia exluído com sucesso.',
                 'data' => $residencia,
             ], 201);
         } catch (\Exception $e) {
@@ -120,6 +120,42 @@ class ResidenciaController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'error' => 'Erro ao buscar os dados o frete.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function createResidenciaByUserId(Request $request, $id)
+    {
+        try {
+
+            $residencia = $this->residenciaService->createResidenciaByUserId($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Residencia criada com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao criar a Residencia.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function fetchResidenciaByUserId(Request $request, $id)
+    {
+        try {
+
+            $residencia = $this->residenciaService->fetchResidenciaByUserId($request->all(), $id);
+
+            return response()->json([
+                'message' => 'Residencia(s) Buscada(s) com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar a Residencia.',
                 'details' => $e->getMessage()
             ], 500);
         }
