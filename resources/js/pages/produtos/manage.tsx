@@ -2,7 +2,7 @@ import Footer from '@/components/footer';
 import Header from '@/components/header';
 import DataGridManage from '@/components/produtos/DataGridManage/DataGridManage';
 import FormCreate from '@/components/produtos/FormCreate/FormCreate';
-import { Categoria, ProdutoDataGrid } from '@/types/api';
+import { CarrinhoSession, Categoria, ProdutoDataGrid } from '@/types/api';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
@@ -16,6 +16,7 @@ export default function Manage() {
     const [severity, setSeverity] = useState<AlertColor>('success');
     const [autoHideDuration, setAutoHideDuration] = useState<number>(6000);
     const [openSnackbar, setOpenSnackbar] = useState(false);
+    const [carrinhoSession, setCarrinhoSession] = useState<CarrinhoSession>();
 
     const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
         if (reason === 'clickaway') {
@@ -24,6 +25,22 @@ export default function Manage() {
 
         setOpenSnackbar(false);
     };
+
+    
+    const fetchCarrinho = useCallback(() => {
+
+        axios
+            .get(`/api/carrinhos/produtos`)
+            .then((response) => {
+                setCarrinhoSession(response?.data?.carrinho);
+            })
+            .catch((error) => {
+                console.error(error);
+                console.error(error?.response?.data?.message);
+            });
+
+        return true;
+    }, []);
 
     const handleSnackbar = useCallback(
         (message = 'Ação realizada com sucesso', severity = 'success' as AlertColor, autoHideDuration = 6000) => {
@@ -71,11 +88,12 @@ export default function Manage() {
     useEffect(() => {
         fetchProdutos();
         fetchCategorias();
+        fetchCarrinho();
     }, []);
 
     return (
         <>
-            <Header />
+            <Header carrinhoSession={carrinhoSession} />
 
             <Box sx={{ mt: 8 }}>
                 <FormCreate categorias={categorias} fetchProdutos={fetchProdutos} handleSnackbar={handleSnackbar} />

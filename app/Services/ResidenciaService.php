@@ -5,8 +5,8 @@ namespace App\Services;
 use App\Models\Residencia;
 use App\Models\User;
 use GuzzleHttp\Client;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class ResidenciaService
 {
@@ -33,7 +33,7 @@ class ResidenciaService
 
             $residencias = Residencia::all();
 
-            if ($residencias == null) throw new FileNotFoundException('Nenhum Residencia foi encontrado.');
+            if ($residencias == null) throw new NotFoundHttpException('Nenhum Residencia foi encontrado.');
 
             return $residencias;
         });
@@ -45,7 +45,7 @@ class ResidenciaService
 
             $residencia = Residencia::find($id);
 
-            if ($residencia == null) throw new FileNotFoundException('o Residencia não foi encontrado.');
+            if ($residencia == null) throw new NotFoundHttpException('o Residencia não foi encontrado.');
 
             return $residencia;
         });
@@ -164,9 +164,25 @@ class ResidenciaService
 
             $residencias = Residencia::where('user_id', $id)->with('estado')->get();
 
-            if ($residencias == null) throw new FileNotFoundException('Nenhum Residencia foi encontrado.');
+            if ($residencias == null) throw new NotFoundHttpException('Nenhum Residencia foi encontrado.');
 
             return $residencias;
+        });
+    }
+
+    public function getFreteDataByResidenciaId($request, $id)
+    {
+        return DB::transaction(function () use ($request, $id) {
+
+            $to = Residencia::where('id', $id)->pluck('cep')->first();
+
+            if ($to == null) throw new NotFoundHttpException('A Residencia não foi encontrado.');
+            
+            $freteData = $this->getFreteData(Residencia::CEP_LOJA_MATRIZ, $to);
+
+            if ($freteData == null) throw new NotFoundHttpException('Não foi possível busca os dados do frete.');
+
+            return $freteData;
         });
     }
 }

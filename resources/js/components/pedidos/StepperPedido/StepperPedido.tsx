@@ -1,22 +1,25 @@
-import * as React from 'react';
+import { CarrinhoSession, FreteMelhorEnvio, Residencia } from '@/types/api';
 import Box from '@mui/material/Box';
-import Stepper from '@mui/material/Stepper';
+import Button from '@mui/material/Button';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
-import Button from '@mui/material/Button';
+import Stepper from '@mui/material/Stepper';
 import Typography from '@mui/material/Typography';
+import * as React from 'react';
+import FormCarrinho from './Forms/FormCarrinho';
 import FormResidencia from './Forms/FormResidencia';
-import { Residencia } from '@/types/api';
 
-const steps = ['Residência', 'Pedido(produtos/valor/quntetc.)', 'Realizar Pagamento'];
+const steps = ['Residência', 'Produtos', 'Realizar Pagamento'];
 
 type StepperPedidoProps =  { 
     residencias : Residencia[] | null;
     residenciaId: number | null;
-    setResidenciaId: (id :number | null) => void;
+    handleResidencia: (id :number | null) => void;
+    carrinhoSession: CarrinhoSession | null ;
+    frete: FreteMelhorEnvio | null ;
 }
 
-export default function StepperPedido({ residencias, residenciaId, setResidenciaId } : StepperPedidoProps) {
+export default function StepperPedido({ residencias, residenciaId, handleResidencia, carrinhoSession, frete } : StepperPedidoProps) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
@@ -24,9 +27,9 @@ export default function StepperPedido({ residencias, residenciaId, setResidencia
 
       switch (id) {
         case 0:
-            return <FormResidencia residencias={residencias} residenciaId={residenciaId} setResidenciaId={setResidenciaId} />;
+            return <FormResidencia residencias={residencias} residenciaId={residenciaId} handleResidencia={handleResidencia} />;
         case 1:
-            return 'b';
+            return <FormCarrinho carrinhoSession={carrinhoSession} frete={frete} />;
         case 2:
             return 'c';
         default:

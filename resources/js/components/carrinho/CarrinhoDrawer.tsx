@@ -78,7 +78,12 @@ export default function CarrinhoDrawer({ open, toggleDrawer, carrinhoSession, ha
                         <Typography variant='h6'>{formatFloat2Money(carrinhoSession?.total || 0)}</Typography>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'end' }}>
-                        <Button variant='contained' color='success' href='/pedidos/realizar' >
+                        <Button 
+                        variant='contained' 
+                        color='success' 
+                        href='/pedidos/realizar'
+                        disabled={Boolean(carrinhoSession?.produtos?.length)}
+                         >
                             Realizar Pedido
                         </Button>
                     </Box>   

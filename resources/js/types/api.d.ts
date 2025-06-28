@@ -84,7 +84,7 @@ export interface CarrinhoProdutoGrid extends CarrinhoProduto {
     produto_id?: string | number;
 }
 
-export interface CarrinhoGridProps extends Carrinho{
+export interface CarrinhoGridProps extends Carrinho {
     produtos?: CarrinhoProdutoGrid[];
 }
 
@@ -121,3 +121,11 @@ export interface Estado {
     sigla: string | null;
     descricao: string | null;
 }
+
+
+export interface FreteMelhorEnvio {
+    id?: number | null;
+    price?: string | null;
+    delivery_time?: string | null;
+}
+

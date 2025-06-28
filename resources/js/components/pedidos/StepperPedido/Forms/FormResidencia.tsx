@@ -9,12 +9,12 @@ import React from 'react';
 type FormCreateProps = {
     residencias: Residencia[] | null;
     residenciaId: string | number | null;
-    setResidenciaId: (id: number | null) => void;
+    handleResidencia: (id: number | null) => void;
 };
 
 
 
-const FormResidencia: React.FC<FormCreateProps> = ({ residencias, residenciaId, setResidenciaId }) => {
+const FormResidencia: React.FC<FormCreateProps> = ({ residencias, residenciaId, handleResidencia }) => {
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }} >
@@ -30,8 +30,7 @@ const FormResidencia: React.FC<FormCreateProps> = ({ residencias, residenciaId, 
                             defaultValue={null}
                             onChange={(e) => {
                                 if(e.target.value){
-                                    console.log(e.target.value)
-                                    setResidenciaId(+e.target.value);
+                                    handleResidencia(+e.target.value);
                                 }
                             }}
                             label="Residência"

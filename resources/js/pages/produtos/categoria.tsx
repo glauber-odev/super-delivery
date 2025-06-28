@@ -63,11 +63,7 @@ export default function Categoria() {
     };
 
     const fetchProdutos = useCallback(() => {
-        // console.log(categoriaParam);
-
         const categoriaId = matchCategoriaId(categoriaParam);
-
-        // console.log(categoriaId);
 
         if(categoriaId > 0) {
             axios
@@ -119,9 +115,7 @@ export default function Categoria() {
             }
 
             if(response.status == 200 || response.status == 201) {
-                // console.log(response?.data?.carrinho);
                 setCarrinhoSession(response?.data?.carrinho);
-                // console.log(carrinhoSession);
             }
 
     },[]);

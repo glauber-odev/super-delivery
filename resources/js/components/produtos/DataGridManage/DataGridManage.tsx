@@ -96,10 +96,7 @@ export default function DataGridManage({
             field: 'imagemProduto',
             headerName: 'Imagem',
             width: 100,
-            // editable: true,
-            // renderCell: ((row: GridCellParams) as ProdutoDataGrid) => (
             renderCell: (row: GridCellParams) => {
-            // renderCell: (row: GridBaseColDef<ProdutoDataGrid>) => (
             const produto = row.row as ProdutoDataGrid;
             const path = () => {
                 const prefix = import.meta.env.BASE_URL

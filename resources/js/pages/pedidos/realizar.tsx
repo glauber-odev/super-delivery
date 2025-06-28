@@ -1,7 +1,7 @@
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import StepperPedido from '@/components/pedidos/StepperPedido/StepperPedido';
-import { CarrinhoSession, Categoria as CategoriaType, ProdutoDataGrid, Residencia } from '@/types/api';
+import { CarrinhoSession, Categoria as CategoriaType, FreteMelhorEnvio, Residencia } from '@/types/api';
 import { usePage } from '@inertiajs/react';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -12,7 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 export default function Realizar({ userId } : { userId : number } ) {
     const { props } = usePage<{ categoriaParam : string}>();
     const categoriaParam = props.categoriaParam;
-    const [produtos, setProdutos] = useState<ProdutoDataGrid[] | null>(null);
+    // const [carrinho, setCarrinho] = useState<CarrinhoSession | null>(null);
     const [categorias, setCategorias] = useState<CategoriaType[] | null>(null);
     const [message, setMessage] = useState<string>('Ação realizada com sucesso');
     const [severity, setSeverity] = useState<AlertColor>('success');
@@ -23,6 +23,7 @@ export default function Realizar({ userId } : { userId : number } ) {
 
     const [residencias, setResidencias] = useState<Residencia[] | null>(null);
     const [residenciaId, setResidenciaId] = useState<number | null>(null);
+    const [frete, setFrete] = useState<FreteMelhorEnvio | null>(null);
 
     const fetchResidencias = useCallback(async () => {
         try {
@@ -64,28 +65,20 @@ export default function Realizar({ userId } : { userId : number } ) {
         setOpenSnackbar(false);
     };
 
-    const fetchProdutos = useCallback(() => {
+    const fetchCarrinho = useCallback(() => {
 
-        // if(categoriaId > 0) {
-            axios
-                // .get(`/api/produtos/categoria/${categoriaId}`)
-                .get(`/api/carrinho/produtos`)
-                .then((response) => {
-                    setProdutos(response?.data?.data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    console.error(error?.response?.data?.message);
-                });
-        // } else {
-        //     console.log('Categoria não encontrada')
-        //     window.location.href = '/';
-        // }
+        axios
+            .get(`/api/carrinhos/produtos`)
+            .then((response) => {
+                setCarrinhoSession(response?.data?.carrinho);
+            })
+            .catch((error) => {
+                console.error(error);
+                console.error(error?.response?.data?.message);
+            });
 
         return true;
     }, []);
-
-    console.log(produtos);
 
     const fetchCategorias = useCallback(() => {
         axios
@@ -99,31 +92,31 @@ export default function Realizar({ userId } : { userId : number } ) {
             });
     }, []);
 
+    const fetchFreteByResidenciaId = useCallback((id: number | null) => {
+
+        axios
+            .get(`/api/residencias/buscar-dados-frete-by-residencia-id/${id}`)
+            .then((response) => {
+                setFrete(response?.data?.data);
+                console.log(response?.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                console.error(error?.response?.data?.message);
+            });
+
+        return true;
+    }, [residenciaId]);
+
+    const handleResidencia = useCallback((id: number | null) => {
+        setResidenciaId(id);
+        fetchFreteByResidenciaId(id);
+    }, [residenciaId, fetchFreteByResidenciaId])
+
     useEffect(() => {
-        fetchProdutos();
+        fetchCarrinho();
         fetchCategorias();
     }, []);
-
-
-    // const handleAddOrEdit = (quantidade: number | null, produto_id: number | null) => {
-
-    //     console.log(produto_id)
-    //         const uri = `/api/carrinhos/produtos/${produto_id}`;
-
-    //         console.log(uri);
-
-    //         const response = axios.post(uri, {
-    //             quantidade: quantidade,
-    //             produto_id: produto_id,
-    //         })
-
-    //         console.log(response);
-
-    //         return response;
-    // }
-
-    
-
 
     return (
         <>
@@ -132,9 +125,12 @@ export default function Realizar({ userId } : { userId : number } ) {
             <Box sx={{ mt: 8 , mb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }} >
                 <Box sx={{ alignItems: 'center', width: '80%' , display: 'flex', justifyContent: 'center'  }} >
                     <StepperPedido 
-                    residencias={residencias}
-                    residenciaId={residenciaId} 
-                    setResidenciaId={setResidenciaId} />
+                        residencias={residencias}
+                        residenciaId={residenciaId} 
+                        handleResidencia={handleResidencia}
+                        carrinhoSession={carrinhoSession || null}
+                        frete={frete}
+                    />
                 </Box>
             </Box>
 

@@ -34,6 +34,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
          *  -------------------------------------- */
         Route::prefix('/carrinhos')->group(function () {
 
+            Route::prefix('/produtos')->group(function () {
+                Route::get('/',[CarrinhoController::class, 'getProdutosFromCarrinhoSession'])->name('api.carrinhos-produtos');
+            });
+
             Route::post('/', [CarrinhoController::class, 'create'])->name('api.carrinhos.create');
             Route::get('/', [CarrinhoController::class, 'fetch'])->name('api.carrinhos.fetch');
             Route::get('/{id}', [CarrinhoController::class, 'findById'])->name('api.carrinhos.find-by-id');
@@ -229,6 +233,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/', [ResidenciaController::class, 'create'])->name('api.residencias.create');
             Route::get('/', [ResidenciaController::class, 'fetch'])->name('api.residencias.fetch');
             Route::get('/buscar-dados-frete', [ResidenciaController::class, 'getFreteData'])->name('api.residencias.buscar-dados-frete');
+            Route::get('/buscar-dados-frete-by-residencia-id/{id}', [ResidenciaController::class, 'getFreteDataByResidenciaId'])->name('api.residencias.buscar-dados-frete-by-residencia-id');
             Route::get('/{id}', [ResidenciaController::class, 'findById'])->name('api.residencias.find-by-id');
             Route::put('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');
             Route::patch('/{id}', [ResidenciaController::class, 'update'])->name('api.residencias.update');

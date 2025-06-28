@@ -6,6 +6,7 @@ use App\Models\CarrinhoProduto;
 use App\Models\Produto;
 use App\Services\CarrinhoService;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class CarrinhoController extends Controller
 {
@@ -186,4 +187,31 @@ class CarrinhoController extends Controller
             ], 500);
         }
     }
+
+    public function getProdutosFromCarrinhoSession($request = null){
+
+
+        if (session()->has("carrinho")) {
+            $carrinhoSession['carrinho'] = session("carrinho");
+        } else {
+            throw new NotFoundHttpException("O Carrinho Esta vazio.");
+        }
+
+        $produtos = $carrinhoSession['carrinho']['produtos'];
+
+        $total = 0;
+        foreach ($produtos as $index => $produto) {
+            $produtoResponse = Produto::with('produtoImagem.imagens')->find($produto['produto_id']);
+            $produtoResponse['quantidade'] = $carrinhoSession['carrinho']['produtos'][$index]['quantidade'];
+            $produtos[$index] = $produtoResponse;
+            $total += $produtos[$index]['quantidade'] * $produtos[$index]['preco'];
+        }
+
+        $carrinhoResponse = $carrinhoSession;
+        $carrinhoResponse['carrinho']['total'] = $total;
+        $carrinhoResponse['carrinho']['produtos'] = array_values($produtos);
+
+        return $carrinhoResponse;
+    }
+
 }

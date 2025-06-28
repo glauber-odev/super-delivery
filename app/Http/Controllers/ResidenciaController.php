@@ -125,6 +125,24 @@ class ResidenciaController extends Controller
         }
     }
 
+    public function getFreteDataByResidenciaId(Request $request, $id)
+    {
+        try {
+            
+            $residencia = $this->residenciaService->getFreteDataByResidenciaId($request, $id);
+
+            return response()->json([
+                'message' => 'Dados buscados com sucesso.',
+                'data' => $residencia,
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'error' => 'Erro ao buscar os dados o frete.',
+                'details' => $e->getMessage()
+            ], 500);
+        }
+    }
+
     public function createResidenciaByUserId(Request $request, $id)
     {
         try {
