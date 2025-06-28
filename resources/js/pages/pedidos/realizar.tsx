@@ -1,7 +1,7 @@
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import StepperPedido from '@/components/pedidos/StepperPedido/StepperPedido';
-import { CarrinhoSession, Categoria as CategoriaType, FreteMelhorEnvio, Residencia } from '@/types/api';
+import { CarrinhoSession, Categoria as CategoriaType, FreteMelhorEnvio, PedidoProgramado, Periodicidade, Residencia, TempoUnidade } from '@/types/api';
 import { usePage } from '@inertiajs/react';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
@@ -24,6 +24,15 @@ export default function Realizar({ userId } : { userId : number } ) {
     const [residencias, setResidencias] = useState<Residencia[] | null>(null);
     const [residenciaId, setResidenciaId] = useState<number | null>(null);
     const [frete, setFrete] = useState<FreteMelhorEnvio | null>(null);
+    const [periodicidades, setPeriodicidades] = useState<Periodicidade[]>()
+    const [tempoUnidades, setTempoUnidades] = useState<TempoUnidade[]>()
+    const [pedidoProgramado, setPedidoProgramado] = useState<PedidoProgramado>({
+        flg_habilitado: false,
+        flg_debito_automatico: false,
+        periodicidade_id: null,
+        tempo_unidade_id: null,
+    });
+    
 
     const fetchResidencias = useCallback(async () => {
         try {
@@ -65,6 +74,10 @@ export default function Realizar({ userId } : { userId : number } ) {
         setOpenSnackbar(false);
     };
 
+    const handlePedidoProgramado = (property: string, value: number | boolean | null) => {
+        setPedidoProgramado({ ...pedidoProgramado, [property]: value });
+    }
+
     const fetchCarrinho = useCallback(() => {
 
         axios
@@ -98,7 +111,6 @@ export default function Realizar({ userId } : { userId : number } ) {
             .get(`/api/residencias/buscar-dados-frete-by-residencia-id/${id}`)
             .then((response) => {
                 setFrete(response?.data?.data);
-                console.log(response?.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -113,9 +125,23 @@ export default function Realizar({ userId } : { userId : number } ) {
         fetchFreteByResidenciaId(id);
     }, [residenciaId, fetchFreteByResidenciaId])
 
+    
+    const fetchTempoUnidades = useCallback(() => {
+        axios
+            .get('/api/tempo-unidades')
+            .then((response) => {
+                setTempoUnidades(response?.data?.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                console.error(error?.response?.data?.message);
+            });
+    }, []);
+
     useEffect(() => {
         fetchCarrinho();
         fetchCategorias();
+        fetchTempoUnidades();
     }, []);
 
     return (
@@ -130,6 +156,9 @@ export default function Realizar({ userId } : { userId : number } ) {
                         handleResidencia={handleResidencia}
                         carrinhoSession={carrinhoSession || null}
                         frete={frete}
+                        pedidoProgramadoData={pedidoProgramado}
+                        handlePedidoProgramado={handlePedidoProgramado}
+                        tempoUnidades={tempoUnidades}
                     />
                 </Box>
             </Box>

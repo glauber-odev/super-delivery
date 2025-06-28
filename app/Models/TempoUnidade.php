@@ -9,9 +9,10 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class TempoUnidade extends Model
 {
     protected $fillable = [
+        'id',
         'unidade',
         'posicao_ordem',
-        'periodicidade_id'
+        'periodicidade_id',
     ];
     
     protected $table = 'tempo_unidades';

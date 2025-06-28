@@ -1,4 +1,4 @@
-import { CarrinhoSession, FreteMelhorEnvio, Residencia } from '@/types/api';
+import { CarrinhoSession, FreteMelhorEnvio, PedidoProgramado, Periodicidade, Residencia, TempoUnidade } from '@/types/api';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Step from '@mui/material/Step';
@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import * as React from 'react';
 import FormCarrinho from './Forms/FormCarrinho';
 import FormResidencia from './Forms/FormResidencia';
+import FormPagamento from './Forms/FormPagamento';
 
 const steps = ['Residência', 'Produtos', 'Realizar Pagamento'];
 
@@ -17,9 +18,21 @@ type StepperPedidoProps =  {
     handleResidencia: (id :number | null) => void;
     carrinhoSession: CarrinhoSession | null ;
     frete: FreteMelhorEnvio | null ;
+    pedidoProgramadoData: PedidoProgramado;
+    tempoUnidades?: TempoUnidade[];
+    handlePedidoProgramado: (property: string, value: number | boolean | null) => void;
 }
 
-export default function StepperPedido({ residencias, residenciaId, handleResidencia, carrinhoSession, frete } : StepperPedidoProps) {
+export default function StepperPedido({ 
+    residencias, 
+    residenciaId, 
+    handleResidencia, 
+    carrinhoSession, 
+    handlePedidoProgramado, 
+    pedidoProgramadoData,
+    frete,
+    tempoUnidades,
+ } : StepperPedidoProps) {
   const [activeStep, setActiveStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set<number>());
 
@@ -31,9 +44,13 @@ export default function StepperPedido({ residencias, residenciaId, handleResiden
         case 1:
             return <FormCarrinho carrinhoSession={carrinhoSession} frete={frete} />;
         case 2:
-            return 'c';
+            return <FormPagamento 
+                    pedidoProgramadoData={pedidoProgramadoData}
+                    handlePedidoProgramado={handlePedidoProgramado}
+                    tempoUnidades={tempoUnidades}
+                     />;
         default:
-            return 'n';
+            return 'Ops, nada aconteceu!';
         break;
       }
     }

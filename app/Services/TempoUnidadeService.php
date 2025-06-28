@@ -13,9 +13,9 @@ class TempoUnidadeService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinho = TempoUnidade::create($request);
+            $tempoUnidade = TempoUnidade::create($request);
 
-            return $carrinho;
+            return $tempoUnidade;
         });
     }
 
@@ -23,11 +23,11 @@ class TempoUnidadeService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = TempoUnidade::all();
+            $tempoUnidades = TempoUnidade::all();
 
-            if($carrinhos == null) throw new FileNotFoundException('Nenhuma unidade de tempo foi encontrado.');
+            if($tempoUnidades == null) throw new FileNotFoundException('Nenhuma unidade de tempo foi encontrado.');
 
-            return $carrinhos;
+            return $tempoUnidades;
         });
     }
 
@@ -35,11 +35,11 @@ class TempoUnidadeService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = TempoUnidade::find($id);
+            $tempoUnidade = TempoUnidade::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('A unidade de tempo não foi encontrado.');
+            if($tempoUnidade == null) throw new FileNotFoundException('A unidade de tempo não foi encontrado.');
 
-            return $carrinho;
+            return $tempoUnidade;
         });
     }
 
@@ -47,9 +47,9 @@ class TempoUnidadeService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = TempoUnidade::where('id', $id)->update($request);
+            $tempoUnidade = TempoUnidade::where('id', $id)->update($request);
 
-            return $carrinho;
+            return $tempoUnidade;
         });
     }
 
@@ -57,10 +57,10 @@ class TempoUnidadeService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = TempoUnidade::findOrFail($id);
-            $carrinho->delete();
+            $tempoUnidade = TempoUnidade::findOrFail($id);
+            $tempoUnidade->delete();
 
-            return $carrinho;
+            return $tempoUnidade;
         });
     }
 

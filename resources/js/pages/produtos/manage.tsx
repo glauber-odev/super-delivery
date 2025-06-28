@@ -93,7 +93,7 @@ export default function Manage() {
 
     return (
         <>
-            <Header carrinhoSession={carrinhoSession} />
+            <Header carrinho={carrinhoSession} />
 
             <Box sx={{ mt: 8 }}>
                 <FormCreate categorias={categorias} fetchProdutos={fetchProdutos} handleSnackbar={handleSnackbar} />

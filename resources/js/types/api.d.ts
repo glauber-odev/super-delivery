@@ -129,3 +129,26 @@ export interface FreteMelhorEnvio {
     delivery_time?: string | null;
 }
 
+export interface PedidoProgramado {
+    flg_habilitado: boolean | null;
+    flg_debito_automatico: booelan | null;
+    periodicidade_id?: number | null;
+    tempo_unidade_id?: nubmer | null;
+    periodicidade?: Periodicidade;
+    tempo_unidade?: TempoUnidade;
+}            
+
+export interface Periodicidade {
+    id?: number | null;
+    descricao: string | null;
+    tempoUnidades?: TempoUnidade[];
+}
+
+export interface TempoUnidade {
+    id?: number | null;
+    descricao: string | null;
+    unidade: number | null;
+    posicao_ordem: number | null;
+    periodicidade_id: number | null;
+    pedidoProgramados?: PedidoProgramado[];
+}

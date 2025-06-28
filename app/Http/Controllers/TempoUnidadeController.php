@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\CarrinhoService;
+use App\Services\TempoUnidadeService;
 use Illuminate\Http\Request;
 
 class TempoUnidadeController extends Controller
@@ -10,7 +10,7 @@ class TempoUnidadeController extends Controller
 
     protected $tempoUnidadeService;
 
-    public function __construct(CarrinhoService $tempoUnidadeService) {
+    public function __construct(TempoUnidadeService $tempoUnidadeService) {
         $this->tempoUnidadeService = $tempoUnidadeService;
     }
 
@@ -18,15 +18,15 @@ class TempoUnidadeController extends Controller
     {
         try {
 
-            $carrinho = $this->tempoUnidadeService->fetch($request->all());
+            $tempoUnidade = $this->tempoUnidadeService->fetch($request->all());
 
             return response()->json([
-                'message' => 'carrinho(s) buscado(s) com sucesso.',
-                'data' => $carrinho,
+                'message' => 'tempoUnidade(s) buscado(s) com sucesso.',
+                'data' => $tempoUnidade,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'error' => 'Erro ao buscar o(s) tempoUnidade(s).',
                 'details' => $e->getMessage()
             ], 500);
         }
@@ -36,15 +36,15 @@ class TempoUnidadeController extends Controller
     {
         try {
 
-            $carrinho = $this->tempoUnidadeService->findById($request->all(), $id);
+            $tempoUnidade = $this->tempoUnidadeService->findById($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) buscado(s) com sucesso.',
-                'data' => $carrinho,
+                'message' => 'TempoUnidades(s) buscado(s) com sucesso.',
+                'data' => $tempoUnidade,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'error' => 'Erro ao buscar o(s) tempoUnidade(s).',
                 'details' => $e->getMessage()
             ], 500);
         }
