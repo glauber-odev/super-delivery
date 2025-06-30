@@ -20,12 +20,13 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [
     {
         title: 'Pedidos',
-        href: '/users/pedidos',
+        // href: '/users/pedidos',
+        href: '/pedidos',
         icon: LocalShippingIcon,
     },
     {
         title: 'Carrinhos',
-        href: '/users/carrinhos',
+        href: '/carrinhos',
         icon: ShoppingCartIcon,
     },
 ];

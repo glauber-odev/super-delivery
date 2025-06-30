@@ -1,18 +1,18 @@
 import Footer from '@/components/footer';
 import Header from '@/components/header';
 import StepperPedido from '@/components/pedidos/StepperPedido/StepperPedido';
-import { CarrinhoSession, Categoria as CategoriaType, FreteMelhorEnvio, PedidoProgramado, Periodicidade, Residencia, TempoUnidade } from '@/types/api';
+import { CarrinhoSession, Categoria as CategoriaType, FreteMelhorEnvio, PedidoProgramado, Residencia, TempoUnidade } from '@/types/api';
 import { usePage } from '@inertiajs/react';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Realizar({ userId } : { userId : number } ) {
-    const { props } = usePage<{ categoriaParam : string}>();
-    const categoriaParam = props.categoriaParam;
-    // const [carrinho, setCarrinho] = useState<CarrinhoSession | null>(null);
+    // const { props } = usePage<{ categoriaParam : string}>();
+    // const categoriaParam = props.categoriaParam;
     const [categorias, setCategorias] = useState<CategoriaType[] | null>(null);
     const [message, setMessage] = useState<string>('Ação realizada com sucesso');
     const [severity, setSeverity] = useState<AlertColor>('success');
@@ -24,15 +24,43 @@ export default function Realizar({ userId } : { userId : number } ) {
     const [residencias, setResidencias] = useState<Residencia[] | null>(null);
     const [residenciaId, setResidenciaId] = useState<number | null>(null);
     const [frete, setFrete] = useState<FreteMelhorEnvio | null>(null);
-    const [periodicidades, setPeriodicidades] = useState<Periodicidade[]>()
     const [tempoUnidades, setTempoUnidades] = useState<TempoUnidade[]>()
     const [pedidoProgramado, setPedidoProgramado] = useState<PedidoProgramado>({
         flg_habilitado: false,
-        flg_debito_automatico: false,
         periodicidade_id: null,
         tempo_unidade_id: null,
+        flg_debito_automatico: false,
     });
     
+
+    const handleSubmit = async () => {
+
+        const confirm = await Swal.fire({
+            title: 'Confirmar Pedido',
+            text: 'Tem certeza que deseja completar este pedido.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Confirmar',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            focusCancel: true,
+        });
+
+        if (confirm.isConfirmed) {
+            const data = {
+                ...pedidoProgramado,
+                residencia_id: residenciaId,
+                user_id: userId,
+            }
+
+            await axios.post('/api/pedidos/create-by-carrinho-session', data );
+            
+            return true;
+        }
+
+        return false;
+    }
 
     const fetchResidencias = useCallback(async () => {
         try {
@@ -150,7 +178,8 @@ export default function Realizar({ userId } : { userId : number } ) {
 
             <Box sx={{ mt: 8 , mb: 8, display: 'flex', justifyContent: 'center', alignItems: 'center', width: '100%' }} >
                 <Box sx={{ alignItems: 'center', width: '80%' , display: 'flex', justifyContent: 'center'  }} >
-                    <StepperPedido 
+                    <StepperPedido
+                        handleSubmit={handleSubmit}
                         residencias={residencias}
                         residenciaId={residenciaId} 
                         handleResidencia={handleResidencia}

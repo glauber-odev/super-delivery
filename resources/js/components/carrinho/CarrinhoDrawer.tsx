@@ -60,7 +60,7 @@ export default function CarrinhoDrawer({ open, toggleDrawer, carrinhoSession, ha
                 </Box>
                 <Divider />
                 <Box sx={{ height: "65%", }} role="presentation" >
-                    <List sx={{ height: "100%", maxHeight: "100%", overflow: 'auto', bgcolor: 'background.paper', width: '100%' }} >
+                    <List key={1} sx={{ height: "100%", maxHeight: "100%", overflow: 'auto', bgcolor: 'background.paper', width: '100%' }} >
                         {carrinhoSession?.produtos?.map((produto, index) => (
                             <>
                                 <CarrinhoDrawerItem key={index} produto={produto} handleCarrinhoUpdate={handleCarrinhoUpdate}  />
@@ -82,7 +82,8 @@ export default function CarrinhoDrawer({ open, toggleDrawer, carrinhoSession, ha
                         variant='contained' 
                         color='success' 
                         href='/pedidos/realizar'
-                        disabled={Boolean(carrinhoSession?.produtos?.length)}
+                        disabled={!carrinhoSession?.produtos?.length}
+
                          >
                             Realizar Pedido
                         </Button>

@@ -14,10 +14,14 @@ return new class extends Migration
             $table->boolean('flg_debito_automatico');
             $table->bigInteger('periodicidade_id');
             $table->bigInteger('tempo_unidade_id');
+            $table->bigInteger('carrinho_id');
+            $table->bigInteger('user_id');
             $table->timestamps();
 
             $table->foreign('periodicidade_id')->references('id')->on('periodicidades');
             $table->foreign('tempo_unidade_id')->references('id')->on('tempo_unidades');
+            $table->foreign('carrinho_id')->references('id')->on('carrinhos');
+            $table->foreign('user_id')->references('id')->on('users');
         });
 
         //pagamentos

@@ -7,6 +7,15 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PedidoProgramado extends Model
 {
+    protected $fillable = [
+        'id',
+        'user_id',
+        'flg_habilitado',
+        'flg_debito_automatico',
+        'periodicidade_id',
+        'tempo_unidade_id',
+        'carrinho_id',
+    ];
 
     protected $table = 'pedidos_programados';
 

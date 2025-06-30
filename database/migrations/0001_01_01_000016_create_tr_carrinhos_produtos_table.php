@@ -9,9 +9,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('tr_carrinhos_produtos', function (Blueprint $table) {
-            $table->integer('id')->primary();
-            $table->bigIncrements('carrinho_id');
-            $table->bigIncrements('produto_id');
+            $table->id();
+            $table->bigInteger('carrinho_id');
+            $table->bigInteger('produto_id');
             $table->integer('quantidade');
 
             $table->foreign('carrinho_id')->references('id')->on('carrinhos');

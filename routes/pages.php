@@ -41,4 +41,22 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('pedidos.realizar');
 
+    Route::get('/pedidos', function () {
+        return Inertia::render('pedidos/listar',[
+            'userId' => Auth::id()
+        ]);
+    })->name('pedidos.listar');
+
+    Route::get('/carrinhos', function () {
+        return Inertia::render('carrinhos/listar',[
+            'userId' => Auth::id()
+        ]);
+    })->name('pedidos.listar');
+
+    Route::get('/pedidos-programados', function () {
+        return Inertia::render('pedidos-programados/PedidoProgramado',[
+            'userId' => Auth::id()
+        ]);
+    })->name('pedidos.listar');
+
 });

@@ -15,12 +15,12 @@ import Typography from '@mui/material/Typography';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 const categorias = [
-    { nome: 'Ofertas', url: '/ofertas' },
-    { nome: 'Hortifruti', url: '/hortifruti' },
-    { nome: 'Padaria', url: '/padaria' },
-    { nome: 'Bebidas', url: '/bebidas' },
-    { nome: 'Carnes', url: '/carnes' },
-    { nome: 'Limpeza', url: '/limpeza' },
+    { nome: 'Hortifruti', url: '/produtos/categoria/hortifruti' },
+    { nome: 'Mercearia', url: '/produtos/categoria/mercearia' },
+    { nome: 'Limpeza', url: '/produtos/categoria/limpeza' },
+    { nome: 'Carnes', url: '/produtos/categoria/carnes' },
+    { nome: 'Bebidas', url: '/produtos/categoria/bebidas' },
+    { nome: 'Bomboniere', url: '/produtos/categoria/bomboniere' },
 ];
 
 interface HeaderProps {

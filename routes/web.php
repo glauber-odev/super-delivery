@@ -153,6 +153,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
          *  -------------------------------------- */
         Route::prefix('/pedidos')->group(function () {
 
+            Route::post('/create-by-carrinho-session', [PedidoController::class, 'createByCarrinhoSession'])->name('api.pedidos.create-by-carrinho-session');
             Route::post('/', [PedidoController::class, 'create'])->name('api.pedidos.create');
             Route::get('/', [PedidoController::class, 'fetch'])->name('api.pedidos.fetch');
             Route::get('/{id}', [PedidoController::class, 'findById'])->name('api.pedidos.find-by-id');

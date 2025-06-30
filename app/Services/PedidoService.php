@@ -2,9 +2,13 @@
 
 namespace App\Services;
 
+use App\Models\Carrinho;
+use App\Models\CarrinhoProduto;
 use App\Models\Pedido;
 use App\Models\PedidoHistorico;
 use App\Models\PedidoProduto;
+use App\Models\PedidoProgramado;
+use App\Models\Produto;
 use App\Models\Residencia;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Facades\DB;
@@ -78,49 +82,96 @@ class PedidoService
     {
         return DB::transaction(function () use ($request) {
 
-            $to = $request->input('to');
-            // $isPedidoProgramado = $request->input('isPedidoProgramado');
-
+            $isPedidoProgramado = $request->input('flg_habilitado');
+            $residenciaId = $request->input('residencia_id');
+            $userId = $request->input('user_id');
             $carrinhoSession = session('carrinho');
-
+            $carrinhoId = $carrinhoSession['id'] ?? null;
+            
+            $to = Residencia::where('id', $residenciaId)->pluck('cep')->first();
+            
             $pedidoParams = $carrinhoSession;
-            unset($carrinhoParams['produtos']);
+            $pedidoParams['flg_pago'] = true;
+            $pedidoParams['flg_retirar_na_loja'] = false;
+            $pedidoParams['residencia_id'] = $residenciaId;
+            unset($pedidoParams['produtos']);
             $pedido = new Pedido($pedidoParams);
 
             $pedido->save();
 
 
-            $carrinhoProdutos = [];
-            $subtotal = 0;
-            foreach ($carrinhoSession['carrinho']['produtos'] as $produto) {
+            $pedidoProdutos = [];
+            $subTotal = 0;
+            foreach ($carrinhoSession['produtos'] as $produto) {
+                $produtoData = Produto::find($produto['produto_id']);
                 $pedidoProdutos[] = [
                     'pedido_id' => $pedido->id,
-                    'produto_id' => $produto->id,
-                    'quantidade' => $produto->quantidade,
+                    'produto_id' => $produto['produto_id'],
+                    'quantidade' => $produto['quantidade'],
                 ];
-                $subtotal += $produto->quantidade * $produto->preco;
+                $subTotal += $produto['quantidade'] * $produtoData->preco;
             }
 
-            $carrinhoProdutos = PedidoProduto::insert($carrinhoProdutos);
+            $carrinhoProdutos = PedidoProduto::insert($pedidoProdutos);
 
             $freteData = $this->residenciaService->getFreteData(Residencia::CEP_LOJA_MATRIZ, $to);
 
             $custoFrete = $freteData['price'];
             $dias_estimados_entrega = $freteData['delivery_time'];
 
-            $pedido->subtotal = $subtotal;
+            $pedido->user_id = $userId;
             $pedido->custo_frete = $custoFrete;
-            $pedido->total = $subtotal + $custoFrete;
+            $pedido->subtotal = $subTotal;
+            $pedido->total = $pedido->subtotal + $pedido->custo_frete;
             $pedido->dias_estimados_entrega = $dias_estimados_entrega;
 
-            $pedidoStatus = PedidoHistorico::create([
+            $pedidoHistoricoStatus = PedidoHistorico::create([
                 'pedido_id' => $pedido->id,
-                'pedido_satuts_id' => 1, // confirmado
+                'pedidos_status_id' => 1, // confirmado
             ]);
 
-            // if($isPedidoProgramado){
-            //     // pedido programado
-            // }
+            //create from carrinho ID ou create from carrinhoSession
+            if($isPedidoProgramado){
+
+                if(!$carrinhoId){
+                    $carrinho = new Carrinho();
+                    $carrinho->user_id = $userId;
+                    $carrinho->residencia_id = $residenciaId;
+                    $carrinho->save();
+                    $carrinhoId = $carrinho->id;
+
+                    $carrinhoProdutos = [];
+                    $total = 0;
+                    foreach ($carrinhoSession['produtos'] as $produto) {
+                        $produtoData = Produto::find($produto['produto_id']);
+                        $carrinhoProdutos[] = [
+                            'carrinho_id' => $carrinho->id,
+                            'produto_id' => $produto['produto_id'],
+                            'quantidade' => $produto['quantidade'],
+                        ];
+                        $total += $produto['quantidade'] * $produtoData->preco;
+                    }
+
+                    $carrinhoProdutos = CarrinhoProduto::insert($carrinhoProdutos);
+
+                    $carrinho->total = $total;
+                    $carrinho->save();
+                }
+
+
+                $pedidoProgramadoParams = $request->only([
+                    'flg_habilitado',
+                    'flg_debito_automatico',
+                    'periodicidade_id',
+                    'tempo_unidade_id',
+                ]);
+
+                $pedidoProgramado = new PedidoProgramado($pedidoProgramadoParams);
+                $pedidoProgramado->user_id = $userId;
+                $pedidoProgramado->carrinho_id = $carrinhoId;
+                $pedidoProgramado->save();
+                
+            };
 
             $pedido->save();
 

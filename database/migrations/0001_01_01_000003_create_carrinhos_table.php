@@ -13,13 +13,15 @@ return new class extends Migration
     {
         Schema::create('carrinhos', function (Blueprint $table) {
             $table->id();
-            $table->string('titulo');
+            $table->string('titulo')->nullable();
             $table->float('total')->nullable();
-            $table->boolean('flg_favorito');
+            $table->boolean('flg_favorito')->nullable();
             $table->bigInteger('user_id');
+            $table->bigInteger('residencia_id');
             $table->timestamps();
-        });
 
+            $table->foreign('residencia_id')->references('id')->on('residencias');
+        });
 
     }
 

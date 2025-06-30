@@ -17,6 +17,21 @@ export default function Manage() {
     const [autoHideDuration, setAutoHideDuration] = useState<number>(6000);
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [carrinhoSession, setCarrinhoSession] = useState<CarrinhoSession>();
+    const [openDrawer, setOpenDrawer] = useState(false);
+
+    const toggleDrawer =
+    (open: boolean) =>
+    (event: React.KeyboardEvent | React.MouseEvent) => {
+        if (
+        event.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+            (event as React.KeyboardEvent).key === 'Shift')
+        ) {
+        return;
+        }
+        console.log(openDrawer);
+        setOpenDrawer(open);
+    };
 
     const handleCloseSnackbar = (event?: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
         if (reason === 'clickaway') {
@@ -93,7 +108,7 @@ export default function Manage() {
 
     return (
         <>
-            <Header carrinho={carrinhoSession} />
+            <Header toggleDrawer={toggleDrawer} carrinho={carrinhoSession} />
 
             <Box sx={{ mt: 8 }}>
                 <FormCreate categorias={categorias} fetchProdutos={fetchProdutos} handleSnackbar={handleSnackbar} />

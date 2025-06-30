@@ -62,10 +62,10 @@ export default function Categoria() {
         setOpenSnackbar(false);
     };
 
-    const fetchProdutos = useCallback(() => {
-        const categoriaId = matchCategoriaId(categoriaParam);
+    const fetchProdutos = useCallback((categorias : CategoriaType[]) => {
+        const categoriaId = matchCategoriaId(categorias, categoriaParam);
 
-        if(categoriaId > 0) {
+        if(categoriaId && categoriaId > 0) {
             axios
                 .get(`/api/produtos/categoria/${categoriaId}`)
                 .then((response) => {
@@ -98,9 +98,15 @@ export default function Categoria() {
     }, []);
 
     useEffect(() => {
-        fetchProdutos();
         fetchCategorias();
     }, []);
+
+    useEffect(() => {
+        if(categorias?.length) {
+            fetchProdutos(categorias);
+            console.log('entrou');
+        }
+    }, [categorias])
 
     const handlePushOrModifyProduto = useCallback(
         async (quantidade: number | null, produto_id: number | null, carrinho_id = -1 ) => {
@@ -151,23 +157,10 @@ export default function Categoria() {
             return response;
     }
 
-    // TODO: adaptar ao fetch categorias
-    function matchCategoriaId (categoria : string) {
-        console.log(categorias);
-        switch (categoria) {
-            case 'mercearia': return 1;
-            case 'bebidas': return 2;
-            case 'carnes': return 3;
-            case 'limpeza': return 4;
-            case 'laticinios': return 5;
-            case 'congelados': return 6;
-            case 'hortifruti': return 7;
-            case 'bomboniere': return 8;
-            case 'outros': return 9;                    
-            default:
-                return -1;
-                break;
-        }
+    function matchCategoriaId (categorias : CategoriaType[], categoriaParam : string) {
+        const index = categorias?.findIndex((categoria) => categoria.descricao?.toLocaleLowerCase() == categoriaParam)
+        if(index > -1 ) return categorias[index]?.id;
+        return -1;
     }
 
     return (

@@ -69,12 +69,13 @@ const FormPagamento: React.FC<FormPagamentoProps> = ({
                                 aria-controls="panel1-content"
                                 id="panel1-header"
                                 >
-                                <Typography component="span">Deseja transformar este pedido em Pedido Programado?</Typography>
+                                <Typography component="span">Deseja transformar este Pedido em Pedido Programado?</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                 <Typography>
-                                    Ao transformar este pedido em programdo, sempre que chegar na data informada será feito o pedido 
-                                    automaticamente, bastando apenas confirmar o pagamento.
+                                    Ao transformar este pedido em programado, sempre que chegar na data informada será feito o pedido 
+                                    automaticamente, bastando apenas confirmar o pagamento. Caso aina não haja, o pedido criará um carrinho
+                                     em sua lista com todos os produtos que serão programaticamente pedidos.
                                 </Typography>
                                 </AccordionDetails>
                             </Accordion>
@@ -89,15 +90,15 @@ const FormPagamento: React.FC<FormPagamentoProps> = ({
                             }}
                             sx={{ ml: 1 }}
                         >
-                            <FormControlLabel value={true} control={<Radio />} label="Sim" />
-                            <FormControlLabel value={false} control={<Radio />} label="Não" />
+                            <FormControlLabel value={true}  control={<Radio color="success" />} label="Sim" />
+                            <FormControlLabel value={false}  control={<Radio color="error" />} label="Não" />
                         </RadioGroup>
                     </FormControl>
 
                     {pedidoProgramadoData.flg_habilitado == true && (
                     <>
                         <FormControl>
-                                <Typography component="span">Esolha a periocidade</Typography>
+                                <Typography component="span">Esolha a Periocidade</Typography>
                             <RadioGroup
                                 aria-labelledby="demo-controlled-radio-buttons-group"
                                 name="controlled-radio-buttons-group"
@@ -114,11 +115,11 @@ const FormPagamento: React.FC<FormPagamentoProps> = ({
                         </FormControl>
 
                         <br />
-                        <Typography sx={{ mb: 2, mt: 2, }} >Esolha quando será feito o pedido</Typography>
+                        <Typography sx={{ mb: 2, mt: 2, }} >Esolha quando será feito o Pedido</Typography>
                         {pedidoProgramadoData.periodicidade_id == 1 && 
                         (
                         <FormControl fullWidth sx={{ mb: 4 }}>
-                            <InputLabel id="dia-semana-label">Escolha o dia da Semana</InputLabel>
+                            <InputLabel id="dia-semana-label">Escolha o Dia da Semana</InputLabel>
                             <Select
                             labelId="dia-semana-label"
                             id="dia-semana"
@@ -126,12 +127,12 @@ const FormPagamento: React.FC<FormPagamentoProps> = ({
                             label="Dia da Semana"
                             onChange={(e) => {
                                 const value = Number(e.target.value);
-                                handlePedidoProgramado( "tempo_unidade_id", value);
+                                handlePedidoProgramado("tempo_unidade_id", value);
                             }}
                             >
                                 {tempoUnidades?.filter((tempoUnidade) => tempoUnidade.periodicidade_id == 1)
                                                 .map((tempoUnidade) => {
-                                    return <MenuItem value={tempoUnidade.id || -1}>{tempoUnidade.unidade}</MenuItem>
+                                    return <MenuItem value={tempoUnidade.id || -1}>Todo(a) {tempoUnidade.unidade}</MenuItem>
                                 })}
                             </Select>
                         </FormControl>
@@ -158,7 +159,40 @@ const FormPagamento: React.FC<FormPagamentoProps> = ({
                             </Select>
                         </FormControl>
                         )}
+
+                        <FormControl>
+                            <Accordion>
+                                <AccordionSummary
+                                expandIcon={<ArrowDownwardIcon />}
+                                aria-controls="panel1-content"
+                                id="panel1-header"
+                                >
+                                <Typography component="span">Deseja habilitar Débito Automático neste Pedido Programado?</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                <Typography>
+                                    Sempre que o pedido programado for realizado o valor da compra será debitado em sua conta automaticamente, 
+                                    sem a necessidade de realizar o pagamento manual. Atenção! só habilite está opção se tiver certeza da sua consequência.
+                                     Para saber mais, acesse a página FAQ ou entre em contato em nossos canais de atendimento.
+                                </Typography>
+                                </AccordionDetails>
+                            </Accordion>
+                            <RadioGroup
+                                aria-labelledby="demo-controlled-radio-buttons-group"
+                                name="controlled-radio-buttons-group"
+                                value={pedidoProgramadoData.flg_debito_automatico}
+                                onChange={(e) => {
+                                const value = e.target.value == "true" ? true : false;
+                                    handlePedidoProgramado( "flg_debito_automatico", value);
+                                }}
+                                sx={{ ml: 1 }}
+                            >
+                                <FormControlLabel value={true}  control={<Radio color="success" />} label="Sim" />
+                                <FormControlLabel value={false}  control={<Radio color="error" />} label="Não" />
+                            </RadioGroup>
+                        </FormControl>
                     </>
+
                     )}
 
                 </Box>

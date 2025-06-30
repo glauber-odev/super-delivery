@@ -14,6 +14,7 @@ class Carrinho extends Model
         'total',
         'flg_favorito',
         'user_id',
+        'residencia_id',
     ];
 
     protected $table = 'carrinhos';
