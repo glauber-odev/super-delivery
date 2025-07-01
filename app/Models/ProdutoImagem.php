@@ -18,7 +18,6 @@ class ProdutoImagem extends Model
 
     protected $table = 'produtos_imagens';
 
-    // TODO: errado
     public function imagens(): BelongsTo
     {
         return $this->belongsTo(Imagem::class, 'imagem_id', 'id');

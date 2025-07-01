@@ -59,4 +59,11 @@ Route::middleware('auth')->group(function () {
         ]);
     })->name('pedidos.listar');
 
+    Route::get('/pedidos-programados/{id}', function ($id) {
+        return Inertia::render('pedidos-programados/PedidoProgramado',[
+            'userId' => Auth::id(),
+            'pedidoProgramadoId' => $id,
+        ]);
+    })->name('pedidos.listar');
+
 });

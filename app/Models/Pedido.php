@@ -35,12 +35,12 @@ class Pedido extends Model
 
     public function pedidoProdutos(): HasMany
     {
-        return $this->hasMany(PedidoProduto::class, 'id', 'pedido_id');
+        return $this->hasMany(PedidoProduto::class, 'pedido_id', 'id');
     }
 
     public function residencia(): HasOne
     {
-        return $this->hasOne(Residencia::class, 'residencia_id', 'id');
+        return $this->hasOne(Residencia::class, 'id', 'residencia_id');
     }
 
     public function pedidoProgramado(): HasOne

@@ -34,8 +34,18 @@ class Carrinho extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function carrinhoProdutos(): BelongsTo
+    public function carrinhoProdutos(): HasMany
     {
-        return $this->belongsTo(CarrinhoProduto::class, 'id', 'carrinho_id');
+        return $this->hasMany(CarrinhoProduto::class, 'carrinho_id', 'id');
+    }
+
+    public function residencia(): BelongsTo
+    {
+        return $this->belongsTo(Residencia::class, 'residencia_id', 'id');
+    }
+
+    public function pedidoProgramado(): BelongsTo
+    {
+        return $this->belongsTo(PedidoProgramado::class, 'id', 'carrinho_id');
     }
 }

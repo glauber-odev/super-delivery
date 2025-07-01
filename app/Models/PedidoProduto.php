@@ -16,7 +16,7 @@ class PedidoProduto extends Model
 
     protected $table = 'tr_pedidos_produtos';
 
-    public function pedido(): BelongsTo
+    public function pedidos(): BelongsTo
     {
         return $this->belongsTo(PedidoStatus::class, 'pedido_id', 'id');
     }

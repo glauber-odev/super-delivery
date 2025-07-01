@@ -35,7 +35,11 @@ class PedidoProgramadoService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = PedidoProgramado::find($id);
+            $carrinho = PedidoProgramado::where('id', $id)->with([
+                'carrinho.carrinhoProdutos.produto.produtoImagem.imagens',
+                'periodicidade',
+                'tempoUnidade',
+                ])->first();
 
             if($carrinho == null) throw new FileNotFoundException('o PedidoProgramado não foi encontrado.');
 

@@ -30,7 +30,11 @@ class CarrinhoService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Carrinho::all();
+            $carrinhos = Carrinho::with([
+                'residencia',
+                'pedidoProgramado',
+                'carrinhoProdutos.produto.produtoImagem.imagens'
+                ])->get();
 
             if($carrinhos == null) throw new FileNotFoundException('Nenhum Carrinho foi encontrado.');
 

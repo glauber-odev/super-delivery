@@ -37,7 +37,7 @@ class PedidoService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Pedido::all();
+            $carrinhos = Pedido::with(['pedidoProdutos.produto.produtoImagem.imagens', 'residencia'])->get();
 
             if ($carrinhos == null) throw new FileNotFoundException('Nenhum Pedido foi encontrado.');
 

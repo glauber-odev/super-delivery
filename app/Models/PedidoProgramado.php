@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class PedidoProgramado extends Model
 {
@@ -32,5 +33,10 @@ class PedidoProgramado extends Model
     public function tempoUnidade(): BelongsTo
     {
         return $this->belongsTo(TempoUnidade::class, 'tempo_unidade_id', 'id');
+    }
+
+    public function carrinho(): HasOne
+    {
+        return $this->hasOne(Carrinho::class, 'id', 'carrinho_id');
     }
 }

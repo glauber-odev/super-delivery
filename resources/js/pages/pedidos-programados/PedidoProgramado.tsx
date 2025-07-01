@@ -1,13 +1,13 @@
-import PedidoProgramadoInfo from '@/components/carrinho/PedidoProgramadoInfo';
+import PedidoProgramadoInfo from '@/components/pedidos-programados/PedidoProgramadoInfo';
 import Footer from '@/components/footer';
 import Header from '@/components/header';
-import { CarrinhoSession } from '@/types/api';
+import { CarrinhoSession, PedidoProgramado as PedidoProgramadoType } from '@/types/api';
 import Alert, { AlertColor } from '@mui/material/Alert';
 import Snackbar, { SnackbarCloseReason } from '@mui/material/Snackbar';
 import axios from 'axios';
 import { useCallback, useEffect, useState } from 'react';
 
-export default function PedidoProgramado({ userId } : { userId : number } ) {
+export default function PedidoProgramado({ userId, pedidoProgramadoId } : { userId : number, pedidoProgramadoId : number } ) {
     // const { props } = usePage<{ categoriaParam : string}>();
     // const categoriaParam = props.categoriaParam;
     // const [categorias, setCategorias] = useState<CategoriaType[] | null>(null);
@@ -17,6 +17,7 @@ export default function PedidoProgramado({ userId } : { userId : number } ) {
     const [openSnackbar, setOpenSnackbar] = useState(false);
     const [carrinhoSession, setCarrinhoSession] = useState<CarrinhoSession>();
     const [openDrawer, setOpenDrawer] = useState(false);
+    const [pedidoProgramado, setPedidoProgramado] = useState<PedidoProgramadoType>();
 
     // const [residencias, setResidencias] = useState<Residencia[] | null>(null);
     // const [residenciaId, setResidenciaId] = useState<number | null>(null);
@@ -115,6 +116,21 @@ export default function PedidoProgramado({ userId } : { userId : number } ) {
         return true;
     }, []);
 
+    const fetchPedidoProgramado = useCallback(() => {
+
+        axios
+            .get(`/api/pedidos-programados/${pedidoProgramadoId}`)
+            .then((response) => {
+                setPedidoProgramado(response?.data?.data);
+            })
+            .catch((error) => {
+                console.error(error);
+                console.error(error?.response?.data?.message);
+            });
+
+        return true;
+    }, []);
+
     // const fetchCategorias = useCallback(() => {
     //     axios
     //         .get('/api/categorias')
@@ -162,15 +178,16 @@ export default function PedidoProgramado({ userId } : { userId : number } ) {
 
     useEffect(() => {
         fetchCarrinho();
-        // fetchCategorias();
-        // fetchTempoUnidades();
+        fetchPedidoProgramado();
     }, []);
 
     return (
         <>
             <Header carrinho={carrinhoSession} toggleDrawer={toggleDrawer} />
 
-            <PedidoProgramadoInfo />
+            {pedidoProgramado && (
+                <PedidoProgramadoInfo pedidoProgramado={pedidoProgramado} />
+            )}
 
             <Snackbar open={openSnackbar} autoHideDuration={autoHideDuration} onClose={handleClose}>
                 <Alert onClose={handleCloseSnackbar} severity={severity} variant="filled" sx={{ width: '100%' }}>

@@ -19,13 +19,13 @@ interface CarrinhoDrawer {
 export default function CarrinhoDrawer({ open, toggleDrawer, carrinhoSession, handlePushOrModifyProduto }: CarrinhoDrawer) {
 
     const formatFloat2Money = (value: number | Intl.StringNumericLiteral) => {
-    const formatter = new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-    });
+        const formatter = new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency: 'BRL',
+            minimumFractionDigits: 2,
+        });
 
-    return formatter.format(value);
+        return formatter.format(value);
     };
 
     const handleCarrinhoUpdate = (quantidade: number | null, produto_id: number | null) => {

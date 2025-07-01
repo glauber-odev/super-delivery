@@ -69,6 +69,13 @@ export interface Carrinho {
     total:  number | null;
     flg_favorito: boolean | null;
     user_id: number | null;
+    pedido_programado?: PedidoProgramado | null;
+    pedido_programado_id?: number | null;
+    residencia?: Residencia;
+    residencia_id?: number | null;
+    produtos?: Produto[] | null;
+    produto_id?: number | null;
+    carrinho_produtos?: CarrinhoProduto[] | null;
 }
 
 export interface CarrinhoProduto {
@@ -76,6 +83,8 @@ export interface CarrinhoProduto {
     carrinho_id?: string | number;
     produto_id?: string | number;
     quantidade?: number | string;
+    produto?: ProdutoWithImg | null;
+    carrinhos?: Carrinho[] | null;
 }
 
 export interface CarrinhoProdutoGrid extends CarrinhoProduto {
@@ -130,13 +139,51 @@ export interface FreteMelhorEnvio {
 }
 
 export interface PedidoProgramado {
+    id?: number | null;
     flg_habilitado: boolean | null;
     flg_debito_automatico: booelan | null;
     periodicidade_id?: number | null;
     tempo_unidade_id?: nubmer | null;
     periodicidade?: Periodicidade;
     tempo_unidade?: TempoUnidade;
+    carrinho?: Carrinho | null;
 }            
+
+export interface Pedido {
+    id?: number | null;
+    titulo: string | null;
+    total: number | null;
+    subtotal: number | null;
+    flg_pago: boolean | null;
+    flg_retirar_na_loja: boolean | null;
+    dias_estimados_entrega: number | null;
+    custo_frete: number | null;
+    user_id: number | null;
+    residencia_id: number | null;
+    residencia: Residencia | null;
+    created_at: string | null;
+    residencia?: Residencia | null;
+    produtos?: ProdutoWithImg[] | null;
+    pedido_produtos: PedidoProduto[];
+}
+
+export interface PedidoProduto {
+    id?: number | null;
+    pedido_id: number | null;
+    produto_id: number | null;
+    quantidade: number | null;
+    produto?: ProdutoWithImg | null;
+    pedidos?: Pedido[] | null;
+}
+
+export interface CarrinhoProduto {
+    id?: number | null;
+    carrinho_id: number | null;
+    produto_id: number | null;
+    quantidade: number | null;
+    produto?: ProdutoWithImg | null;
+    carrinhos?: Carrinho[] | null;
+}
 
 export interface Periodicidade {
     id?: number | null;
@@ -150,5 +197,6 @@ export interface TempoUnidade {
     unidade: number | null;
     posicao_ordem: number | null;
     periodicidade_id: number | null;
+    periodicidade?: Periodicidade | null;
     pedidoProgramados?: PedidoProgramado[];
 }
