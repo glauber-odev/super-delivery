@@ -13,9 +13,9 @@ class CategoriaService
     // {
     //     return DB::transaction(function () use ($request) {
 
-    //         $carrinho = Categoria::create($request);
+    //         $categoria = Categoria::create($request);
 
-    //         return $carrinho;
+    //         return $categoria;
     //     });
     // }
 
@@ -23,11 +23,11 @@ class CategoriaService
     {
         return DB::transaction(function () use ($request) {
 
-            $carrinhos = Categoria::all();
+            $categorias = Categoria::all();
 
-            if($carrinhos == null) throw new FileNotFoundException('Nenhum Categoria foi encontrado.');
+            if($categorias == null) throw new FileNotFoundException('Nenhum Categoria foi encontrado.');
 
-            return $carrinhos;
+            return $categorias;
         });
     }
 
@@ -35,11 +35,11 @@ class CategoriaService
     {
         return DB::transaction(function () use ($request, $id) {
 
-            $carrinho = Categoria::find($id);
+            $categoria = Categoria::find($id);
 
-            if($carrinho == null) throw new FileNotFoundException('o Categoria não foi encontrado.');
+            if($categoria == null) throw new FileNotFoundException('a Categoria não foi encontrado.');
 
-            return $carrinho;
+            return $categoria;
         });
     }
 
@@ -47,9 +47,9 @@ class CategoriaService
     // {
     //     return DB::transaction(function () use ($request, $id) {
 
-    //         $carrinho = Categoria::where('id', $id)->update($request);
+    //         $categoria = Categoria::where('id', $id)->update($request);
 
-    //         return $carrinho;
+    //         return $categoria;
     //     });
     // }
 
@@ -57,10 +57,10 @@ class CategoriaService
     // {
     //     return DB::transaction(function () use ($request, $id) {
 
-    //         $carrinho = Categoria::findOrFail($id);
-    //         $carrinho->delete();
+    //         $categoria = Categoria::findOrFail($id);
+    //         $categoria->delete();
 
-    //         return $carrinho;
+    //         return $categoria;
     //     });
     // }
 

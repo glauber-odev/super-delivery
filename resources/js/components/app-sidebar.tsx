@@ -12,7 +12,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 const mainNavItems: NavItem[] = [
     {
         title: 'Produtos',
-        href: '/dashboard',
+        href: '/produtos/manage',
         icon: LayoutGrid,
     },
 ];

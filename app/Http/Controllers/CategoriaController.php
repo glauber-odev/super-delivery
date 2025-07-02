@@ -39,12 +39,12 @@ class CategoriaController extends Controller
             $carrinho = $this->categoriaService->findById($request->all(), $id);
 
             return response()->json([
-                'message' => 'Carrinho(s) buscado(s) com sucesso.',
+                'message' => 'Categoria buscada com sucesso.',
                 'data' => $carrinho,
             ], 201);
         } catch (\Exception $e) {
             return response()->json([
-                'error' => 'Erro ao buscar o(s) carrinho(s).',
+                'error' => 'Erro ao buscar a categoria.',
                 'details' => $e->getMessage()
             ], 500);
         }
